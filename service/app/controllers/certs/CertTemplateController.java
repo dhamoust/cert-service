@@ -139,6 +139,46 @@ public class CertTemplateController extends BaseController {
                 });
     }
 
+    public CompletionStage<Result> getTemplates() {
+        try {
+        /*    Map<String, Object> template = getTemplate(getRequest(request()));
+            validateTemplate(template, true);
+            String identifier = (String) template.get("identifier");*/
+
+            CompletableFuture<Map<String, Object>> future ;
+
+            future = ElasticSearchUtil.getTemplates();
+
+            return future.handleAsync((map, exception) -> {
+                Response response = new Response();
+                if (null != exception) {
+                    if (exception instanceof BaseException) {
+                        BaseException ex = (BaseException) exception;
+                        response.setResponseCode(ResponseCode.BAD_REQUEST);
+                        response.put(JsonKey.MESSAGE, ex.getMessage());
+                    } else {
+                        response.setResponseCode(ResponseCode.SERVER_ERROR);
+                        response.put(JsonKey.MESSAGE,locale.getMessage(IResponseMessage.INTERNAL_ERROR,null));
+                    }
+                } else {
+                    response.putAll(map);
+                }
+                return response;
+            }).thenApplyAsync(response -> {
+                JsonNode jsonNode = Json.toJson(response);
+                if(StringUtils.equalsIgnoreCase(response.getResponseCode().name(), ResponseCode.BAD_REQUEST.name())) {
+                    return Results.badRequest(jsonNode);
+                } else if (StringUtils.equalsIgnoreCase(response.getResponseCode().name(), ResponseCode.SERVER_ERROR.name())) {
+                    return Results.internalServerError(jsonNode);
+                }
+                return Results.ok(jsonNode);
+            });
+
+        } catch (Exception ex) {
+            return CompletableFuture.completedFuture(RequestHandler.handleFailureResponse(ex,request()));
+        }
+    }
+
     private Request getRequest(play.mvc.Http.Request req) throws Exception {
         Request request = new Request();
         if (req.body() != null && req.body().asJson() != null) {

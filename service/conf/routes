@@ -21,3 +21,5 @@ POST /v2/certs/generate                    @controllers.certs.CertsGenerationCon
 POST /cert/v1/template/create @controllers.certs.CertTemplateController.create(request: play.mvc.Http.Request)
 PATCH /cert/v1/template/update/:identifier @controllers.certs.CertTemplateController.update(identifier: String, request: play.mvc.Http.Request)
 GET /cert/v1/template/read/:identifier @controllers.certs.CertTemplateController.read(identifier: String, request: play.mvc.Http.Request)
+
+GET  /templates                                 @controllers.certs.CertTemplateController.getTemplates()

@@ -45,8 +45,8 @@ public class CertValidator {
         validateCertData((List<Map<String, Object>>) certReq.get(JsonKey.DATA));
         validateCertIssuer((Map<String, Object>) certReq.get(JsonKey.ISSUER));
         validateCertSignatoryList((List<Map<String, Object>>) certReq.get(JsonKey.SIGNATORY_LIST));
-        validateCriteria((Map<String, Object>) certReq.get(JsonKey.CRITERIA));
-        validateTagId((String) certReq.get(JsonKey.TAG));
+//        validateCriteria((Map<String, Object>) certReq.get(JsonKey.CRITERIA));
+//        validateTagId((String) certReq.get(JsonKey.TAG));
         String basePath = (String) certReq.get(JsonKey.BASE_PATH);
         if (StringUtils.isNotBlank(basePath)) {
             validateBasePath(basePath);
