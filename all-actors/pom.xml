@@ -39,6 +39,12 @@
             <artifactId>logstash-logback-encoder</artifactId>
             <version>6.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.sunbird</groupId>
+            <artifactId>es-utils</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

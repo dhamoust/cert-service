@@ -424,8 +424,8 @@ public class ElasticSearchUtil {
 
 		map.put("diksha","https://ntpstagingall.blob.core.windows.net/user/cert/File-01311849840255795242.svg");
 		map.put("niit","https://ntpstagingall.blob.core.windows.net/user/cert/File-01311849840255795242.svg");
-		map.put("niitifbi","https://ntpstagingall.blob.core.windows.net/user/cert/File-01311849840255795242.svg");
-
+		map.put("niitifbi","https://sunbird1dev1public.blob.core.windows.net/public/print-service/RishabCertificate.zip");
+		map.put("niitcompletionId", "https://sunbird1dev1private.blob.core.windows.net/reports/print-service/niitParticipation.svg");
 		future.complete(map);
 				/*	put("identifier", indexResponse.getId());
 				}});

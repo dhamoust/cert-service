@@ -56,6 +56,7 @@ public interface JsonKey {
     String COURSE_NAME = "courseName";
     String NAME = "name";
     String HTML_TEMPLATE = "htmlTemplate";
+    String HTML_TEMPLATE_ID = "htmlTemplateId";
     String ISSUER = "issuer";
     String URL = "url";
     String SIGNATORY_LIST = "signatoryList";
@@ -116,6 +117,9 @@ public interface JsonKey {
     String VERSION = "version";
     String GENERATE_CERT_V2 = "generateCertV2";
     String SVG_TEMPLATE = "svgTemplate";
+    String SVG_TEMPLATE_ID = "svgTemplateId";
+    String LOCATION = "location";
+
     String REQ_ID = "reqId";
     String REQUEST_MESSAGE_ID = "msgId";
     String X_REQUEST_ID = "X-Request-ID";

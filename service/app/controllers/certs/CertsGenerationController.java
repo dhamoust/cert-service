@@ -5,6 +5,9 @@ import java.util.Map;
 import java.util.concurrent.CompletionStage;
 
 import akka.actor.ActorRef;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.sunbird.es.ElasticSearchUtil;
 import org.sunbird.incredible.processor.JsonKey;
 import org.sunbird.cert.actor.operation.CertActorOperation;
 
@@ -12,6 +15,7 @@ import controllers.BaseController;
 import org.sunbird.request.Request;
 import play.mvc.Http;
 import play.mvc.Result;
+import utils.module.OnRequestHandler;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,6 +39,7 @@ public class CertsGenerationController  extends BaseController{
 	@Inject
 	@Named("template_validate_actor")
 	private ActorRef templateValidateActorRef;
+	Logger logger = LoggerFactory.getLogger(OnRequestHandler.class);
 
 	/**
 	   * This method will accept request for certificate generation.
@@ -47,6 +52,12 @@ public class CertsGenerationController  extends BaseController{
 					Request req = (Request) request;
 					Map<String, Object> context = new HashMap<>();
 					context.put(JsonKey.VERSION, JsonKey.VERSION_1);
+					Map<String, Object> certReq = (Map<String, Object>) req.getRequest().get(JsonKey.CERTIFICATE);
+					String templateId = (String) certReq.get(JsonKey.HTML_TEMPLATE_ID);
+					String url = (String) ((HashMap) ElasticSearchUtil.getTemplates().get()).get(templateId);
+					certReq.put(JsonKey.HTML_TEMPLATE, url);
+					logger.info("=============" + req);
+					context.put(JsonKey.LOCATION,certReq.get(JsonKey.LOCATION));
 					req.setContext(context);
 					new CertValidator().validateGenerateCertRequest(req);
 					return null;
@@ -62,6 +73,12 @@ public class CertsGenerationController  extends BaseController{
 					Request req = (Request) request;
 					Map<String, Object> context = new HashMap<>();
 					context.put(JsonKey.VERSION, JsonKey.VERSION_2);
+					Map<String, Object> certReq = (Map<String, Object>) req.getRequest().get(JsonKey.CERTIFICATE);
+					String templateId = (String) certReq.get(JsonKey.SVG_TEMPLATE_ID);
+					String url = (String) ((HashMap) ElasticSearchUtil.getTemplates().get()).get(templateId);
+					certReq.put(JsonKey.SVG_TEMPLATE, url);
+					logger.info("=============" + req);
+					context.put(JsonKey.LOCATION,certReq.get(JsonKey.LOCATION));
 					req.setContext(context);
 					new CertValidator().validateGenerateCertRequest(req);
 					return null;
