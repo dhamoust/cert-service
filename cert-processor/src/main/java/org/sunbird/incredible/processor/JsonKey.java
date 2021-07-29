@@ -85,7 +85,8 @@ public interface JsonKey {
     String ACCESS_CODE = "accessCode";
     String JSON_DATA = "jsonData";
 
-    String STORE = "store";
+    //    String STORE = "store";
+    String STORE = "storeConfig";
     String key = "key";
     String VERIFY_CERT = "verifyCert";
     String UUID = "uuid";

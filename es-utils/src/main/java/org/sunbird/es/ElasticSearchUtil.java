@@ -413,4 +413,31 @@ public class ElasticSearchUtil {
 		}
 	}
 
+	public static CompletableFuture<Map<String, Object>> getTemplates() {
+		CompletableFuture<Map<String, Object>> future = new CompletableFuture<>();
+		//IndexRequest indexRequest = (StringUtils.isNotBlank(documentId)) ?
+		//		new IndexRequest(indexName, documentType, documentId) : new IndexRequest(indexName, documentType);
+		/*getClient(indexName).indexAsync(indexRequest.source(doc), new ActionListener<IndexResponse>() {
+			@Override
+			public void onResponse(IndexResponse indexResponse) {*/
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("diksha","https://ntpstagingall.blob.core.windows.net/user/cert/File-01311849840255795242.svg");
+		map.put("niit","https://ntpstagingall.blob.core.windows.net/user/cert/File-01311849840255795242.svg");
+		map.put("niitifbi","https://ntpstagingall.blob.core.windows.net/user/cert/File-01311849840255795242.svg");
+
+		future.complete(map);
+				/*	put("identifier", indexResponse.getId());
+				}});
+			}
+			@Override
+			public void onFailure(Exception e) {
+				future.completeExceptionally(e);
+			}
+		});*/
+		return future;
+	}
+
+
+
 }

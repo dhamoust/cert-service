@@ -46,7 +46,8 @@ public class CertsConstant {
         if (StringUtils.isNotBlank(basePath)) {
             BASE_PATH = basePath;
         } else {
-            BASE_PATH = DOMAIN_URL + "/" + SLUG;
+//            BASE_PATH = DOMAIN_URL + "/" + SLUG;
+            BASE_PATH = DOMAIN_URL;
         }
     }
 
@@ -95,7 +96,10 @@ public class CertsConstant {
 
     private static String getDomainUrlFromEnv() {
         String domainUrl = getPropertyFromEnv(JsonKey.DOMAIN_URL);
-        return StringUtils.isNotBlank(domainUrl) ? domainUrl : "https://dev.sunbirded.org";
+//        return StringUtils.isNotBlank(domainUrl) ? domainUrl : "https://dev.sunbirded.org";
+        return StringUtils.isNotBlank(domainUrl) ? domainUrl : "https://sunbird1dev1private.blob.core.windows.net/reports/print-service";
+//        return StringUtils.isNotBlank(domainUrl) ? domainUrl : "/Users/apple/sunbird";
+
     }
 
     private static String getContainerNameFromEnv() {
