@@ -30,23 +30,6 @@
 						</div>
 					</div>
 
-					<!-- <div class="ui right attached segment" suiTabContent="2">
-						<p class="tac">Choose Template</p>
-						<div class="ui form">
-							<div class="field" [ngClass]="{ required: true }">
-								<label>Template</label>
-								<div class="field">
-									<sui-select id="htmlTemplateUrl" name="htmlTemplateUrl" class="selection" [(ngModel)]="htmlTemplate">
-										<sui-select-option *ngFor="let option of listOfTemplate" [value]="option.name"></sui-select-option>
-									</sui-select>
-								</div>
-							</div>
-						</div>
-						<div class="mt-20 d-flex flex-jc-flex-end">
-							<button class="ui blue button" (click)="recipientTab = true">Next</button>
-						</div>
-					</div> -->
-
 					<div class="ui right attached segment" suiTabContent="2">
 						<p class="tac">Enter Recipient Details</p>
 						<app-default-template #formData [formFieldProperties]="formFieldProperties"></app-default-template>

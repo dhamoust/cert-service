@@ -56,7 +56,6 @@
                 },
                 "index": 3
             },
-
             {
                 "code": "courseName",
                 "dataType": "text",
@@ -119,8 +118,8 @@
                 "inputType": "text",
                 "required": true,
                 "displayProperty": "Editable",
-                "visible": true,        
-                "value":"Ekstep",
+                "visible": true,
+                "value": "NIIT",
                 "renderingHints": {
                     "semanticColumnWidth": "six"
                 },
@@ -138,7 +137,7 @@
                 "required": true,
                 "displayProperty": "Editable",
                 "visible": true,
-                "value":"http://diksha.gov.in",
+                "value": "www.niit.com",
                 "renderingHints": {
                     "semanticColumnWidth": "six"
                 },

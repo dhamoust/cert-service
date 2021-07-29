@@ -40,6 +40,10 @@ export class CreateCertificateComponent implements OnInit {
   showAllCerts = [
     '/assets/certificates/template-1.svg',
     '/assets/certificates/template-2.svg',
+    '/assets/certificates/template-3.svg',
+    '/assets/certificates/template-4.svg',
+    '/assets/certificates/template-5.svg',
+    '/assets/certificates/template-6.svg',
   ];
   certSelected = [];
   constructor(dataService: DataService, formService: FormService, resourceService: ResourceService, router: Router) {
@@ -53,6 +57,7 @@ export class CreateCertificateComponent implements OnInit {
     this.templateActive = true;
     this.formService.getFormConfig("certificate").subscribe(res => {
       this.formFieldProperties = res.fields;
+      console.log(this.formFieldProperties);
     });
     this.formService.getFormConfig("signatory").subscribe(res => {
       this.signatoryFieldProperties = res.fields;
@@ -127,7 +132,8 @@ export class CreateCertificateComponent implements OnInit {
     certificate.data = data;
     certificate.issuer = issuer;
     certificate.signatoryList = signatoryList;
-    certificate.htmlTemplate = this.htmlTemplate;
+    // certificate.htmlTemplate = this.htmlTemplate;
+    certificate.htmlTemplate = `${window.location.origin}${this.certSelected[0]}`;
     certificate.courseName = requestData.courseName;
     certificate.name = requestData.certificateName;
     certificate.description = requestData.certificateDescription;
@@ -191,13 +197,23 @@ export class CreateCertificateComponent implements OnInit {
 
   selectedSvgCert(event) {
     event.stopPropagation();
-    // document.getElementById(this.certSelected[0]).classList.remove('svg__icon--active');
-    this.certSelected = [];
-    if(!event.target.classList.contains('svg__icon--active')) {
-      event.target.classList.add('svg__icon--active');
-      this.certSelected.push(event.target.id);
+    if(this.certSelected.length > 0) {
+      if(this.certSelected[0] !== event.target.id) {
+        if(!event.target.classList.contains('svg__icon--active')) {
+          document.getElementById(this.certSelected[0]).classList.remove('svg__icon--active');
+          event.target.classList.add('svg__icon--active');
+          this.certSelected.pop();
+          this.certSelected.push(event.target.id);
+        }
+      } else {
+        event.target.classList.remove('svg__icon--active');
+        this.certSelected.pop();
+      }
     } else {
-      event.target.classList.remove('svg__icon--active');
+      if(!event.target.classList.contains('svg__icon--active')) {
+        event.target.classList.add('svg__icon--active');
+        this.certSelected.push(event.target.id);
+      }
     }
     console.log(this.certSelected);
   }
