@@ -7,7 +7,7 @@ import * as _ from 'lodash-es';
 import urlConfig from '../../services/urlConfig.json';
 import { CertReq, Store, Templates } from '../../services/interfaces/certificate';
 import { Router } from '@angular/router';
-
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-create-certificate',
@@ -37,6 +37,11 @@ export class CreateCertificateComponent implements OnInit {
   htmlTemplate: string;
   listOfTemplate: Array<Templates> = [];
   id: number = 1;
+  showAllCerts = [
+    '/assets/certificates/template-1.svg',
+    '/assets/certificates/template-2.svg',
+  ];
+  certSelected = [];
   constructor(dataService: DataService, formService: FormService, resourceService: ResourceService, router: Router) {
     this.dataService = dataService;
     this.resourceService = resourceService;
@@ -60,9 +65,10 @@ export class CreateCertificateComponent implements OnInit {
 
 
   getTemplates() {
+
     const template = {
       id: "temp1",
-      name: "v1/certificate.zip"
+      name: "/assets/certificates/template-1.svg"
     }
     this.listOfTemplate.push(template);
   }
@@ -88,8 +94,8 @@ export class CreateCertificateComponent implements OnInit {
     });
   }
   /**
-   * 
-   * @param request 
+   *
+   * @param request
    */
   generateData(request: any) {
     const signatoryList = [];
@@ -181,5 +187,18 @@ export class CreateCertificateComponent implements OnInit {
   previewCertificate() {
     this.preview = true;
     this.createCertificate();
+  }
+
+  selectedSvgCert(event) {
+    event.stopPropagation();
+    // document.getElementById(this.certSelected[0]).classList.remove('svg__icon--active');
+    this.certSelected = [];
+    if(!event.target.classList.contains('svg__icon--active')) {
+      event.target.classList.add('svg__icon--active');
+      this.certSelected.push(event.target.id);
+    } else {
+      event.target.classList.remove('svg__icon--active');
+    }
+    console.log(this.certSelected);
   }
 }

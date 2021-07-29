@@ -23,3 +23,5 @@ RUNNING_PID
 
 setVars.sh
 .DS_Store
+node_modules
+.vscode

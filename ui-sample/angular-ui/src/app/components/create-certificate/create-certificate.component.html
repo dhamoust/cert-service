@@ -1,87 +1,101 @@
+<!-- @format -->
+
 <div class="ui container mb-20 mt-20 pb-6">
-  <div class="ui raised shadow container">
-    <h3 class="center tac mb-20">{{resourceService?.frmelmnts?.msg?.generateCert}}</h3>
-    <sui-tabset>
-      <div class="ui stackable grid">
-        <div class="three wide column pt-0">
-          <div class="ui left attached vertical tabular menu">
-            <a class="item" suiTabHeader="1" [(isActive)]="templateActive">Select template</a>
-            <a class="item" suiTabHeader="2" [(isActive)]="recipientTab"> Recipient & Issuer details</a>
-            <a class="item" suiTabHeader="3" [(isActive)]="signatoryTab"> Signatory details</a>
-            <a class="item" suiTabHeader="4" [(isActive)]="storageTab"> Storage Info</a>
-            <a class="item" suiTabHeader="5" [(isActive)]="generateTab"
-              [isDisabled]="thirdDisabled">Preview/Generate</a>
-          </div>
-        </div>
+	<div class="ui raised shadow container">
+		<h3 class="center tac mb-20">{{ resourceService?.frmelmnts?.msg?.generateCert }}</h3>
+		<sui-tabset>
+			<div class="ui stackable grid">
+				<div class="three wide column pt-0">
+					<div class="ui left attached vertical tabular menu">
+						<a class="item" suiTabHeader="1" [(isActive)]="templateActive">Select template</a>
+						<!-- <a class="item" suiTabHeader="2" [(isActive)]="createTab">Create template</a> -->
+						<a class="item" suiTabHeader="2" [(isActive)]="recipientTab">Recipient & Issuer details</a>
+						<a class="item" suiTabHeader="3" [(isActive)]="signatoryTab">Signatory details</a>
+						<a class="item" suiTabHeader="4" [(isActive)]="storageTab">Storage Info</a>
+						<a class="item" suiTabHeader="5" [(isActive)]="generateTab" [isDisabled]="thirdDisabled">Preview/Generate</a>
+					</div>
+				</div>
 
-        <div class="nine wide column pt-0">
+				<div class="nine wide column pt-0">
+					<div class="ui right attached segment" suiTabContent="1">
+						<p class="tac">Select Template</p>
+						<div class="svg__overflow svg__display">
+							<span class="svg__width" (click)="selectedSvgCert($event)" [id]="cert" *ngFor="let cert of showAllCerts">
+								<svg-icon class="svg__icon" [src]="cert" [stretch]="true"></svg-icon>
+							</span>
+						</div>
+						<!-- .svg Close -->
+						<div class="mt-20 d-flex flex-jc-flex-end">
+							<button class="ui blue button" (click)="recipientTab = true">Next</button>
+						</div>
+					</div>
 
-          <div class="ui right attached segment" suiTabContent="1">
-            <p class="tac">Choose Template</p>
-            <div class="ui form">
-              <div class="field" [ngClass]="{'required':true}">
-                <label>Template</label>
-                <div class="field">
-                  <sui-select id="htmlTemplateUrl" name="htmlTemplateUrl" class="selection" [(ngModel)]="htmlTemplate">
-                    <sui-select-option *ngFor="let option of listOfTemplate" [value]="option.name"></sui-select-option>
-                  </sui-select>
-                </div>
-              </div>
-            </div>
+					<!-- <div class="ui right attached segment" suiTabContent="2">
+						<p class="tac">Choose Template</p>
+						<div class="ui form">
+							<div class="field" [ngClass]="{ required: true }">
+								<label>Template</label>
+								<div class="field">
+									<sui-select id="htmlTemplateUrl" name="htmlTemplateUrl" class="selection" [(ngModel)]="htmlTemplate">
+										<sui-select-option *ngFor="let option of listOfTemplate" [value]="option.name"></sui-select-option>
+									</sui-select>
+								</div>
+							</div>
+						</div>
+						<div class="mt-20 d-flex flex-jc-flex-end">
+							<button class="ui blue button" (click)="recipientTab = true">Next</button>
+						</div>
+					</div> -->
 
-            <div class="mt-20 d-flex flex-jc-flex-end">
-              <button class="ui blue button" (click)="recipientTab = true">Next</button>
-            </div>
-          </div>
+					<div class="ui right attached segment" suiTabContent="2">
+						<p class="tac">Enter Recipient Details</p>
+						<app-default-template #formData [formFieldProperties]="formFieldProperties"></app-default-template>
+						<div class="mt-20 d-flex flex-jc-flex-end">
+							<button class="ui blue button" (click)="signatoryTab = true">Next</button>
+						</div>
+					</div>
 
-          <div class="ui right attached segment" suiTabContent="2">
-            <p class="tac">Enter Recipient Details</p>
-            <app-default-template #formData [formFieldProperties]="formFieldProperties"></app-default-template>
-            <div class="mt-20 d-flex flex-jc-flex-end">
-              <button class="ui blue button" (click)="signatoryTab = true">Next</button>
-            </div>
-          </div>
+					<div class="ui right attached segment" suiTabContent="3">
+						<p class="tac">Enter Signatory Details</p>
+						<div *ngIf="signatoryCount > 0">
+							<div *ngFor="let i of signatory">
+								<app-default-template #signatoryForm [formFieldProperties]="signatoryFieldProperties"> </app-default-template>
+							</div>
+							<div id="icons">
+								<h4 class="mt-20"><i class="fas fa-minus-circle" (click)="removeSignatory()"></i></h4>
+								<h4 class="mt-20"><i class="fas fa-plus-circle" (click)="addSignatory()"></i></h4>
+							</div>
+						</div>
+						<div class="mt-20 d-flex flex-jc-flex-end">
+							<button class="ui blue button" (click)="storageTab = true">Next</button>
+						</div>
+					</div>
 
-          <div class="ui right attached segment" suiTabContent="3">
-            <p class="tac">Enter Signatory Details</p>
-            <div *ngIf="signatoryCount > 0">
-              <div *ngFor="let i of signatory">
-                <app-default-template #signatoryForm [formFieldProperties]="signatoryFieldProperties">
-                </app-default-template>
-              </div>
-              <div id="icons">
-                <h4 class="mt-20"><i class="fas fa-minus-circle" (click)="removeSignatory()"></i> </h4>
-                <h4 class="mt-20"><i class="fas fa-plus-circle" (click)="addSignatory()"></i></h4>
-              </div>
-            </div>
-            <div class="mt-20 d-flex flex-jc-flex-end">
-              <button class="ui blue button" (click)="storageTab = true">Next</button>
-            </div>
-          </div>
+					<div class="ui right attached segment" suiTabContent="4">
+						<div class="mb-20">
+							<p>Do you want to enter Storage Details?</p>
+							<sui-checkbox [(ngModel)]="storageInfo">yes</sui-checkbox>
+						</div>
+						<div *ngIf="storageInfo">
+							<app-default-template #storageForm [formFieldProperties]="storeFieldProperties"></app-default-template>
+						</div>
+						<div class="mt-20 d-flex flex-jc-flex-end">
+							<button class="ui blue button" (click)="generateTab = true">Next</button>
+						</div>
+					</div>
 
-          <div class="ui right attached segment" suiTabContent="4">
-            <div class="mb-20">
-              <p>Do you want to enter Storage Details?</p>
-              <sui-checkbox [(ngModel)]="storageInfo">yes</sui-checkbox>
-            </div>
-            <div *ngIf="storageInfo">
-              <app-default-template #storageForm [formFieldProperties]="storeFieldProperties"></app-default-template>
-            </div>
-            <div class="mt-20 d-flex flex-jc-flex-end">
-              <button class="ui blue button" (click)="generateTab = true">Next</button>
-            </div>
-          </div>
-          <div class="ui right attached segment" suiTabContent="5">
-            <div class="buttons flex-jc-center">
-              <button class="sb-btn sb-btn-normal primary"
-                (click)="previewCertificate()">{{resourceService?.frmelmnts?.btn?.preview}}</button>
-              <button class="mr-20 sb-btn sb-btn-normal primary" (click)="createCertificate()">
-                {{resourceService?.frmelmnts?.btn?.generate}} </button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </sui-tabset>
-  </div>
+					<div class="ui right attached segment" suiTabContent="5">
+						<div class="buttons flex-jc-center">
+							<button class="sb-btn sb-btn-normal primary" (click)="previewCertificate()">
+								{{ resourceService?.frmelmnts?.btn?.preview }}
+							</button>
+							<button class="mr-20 sb-btn sb-btn-normal primary" (click)="createCertificate()">
+								{{ resourceService?.frmelmnts?.btn?.generate }}
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</sui-tabset>
+	</div>
 </div>

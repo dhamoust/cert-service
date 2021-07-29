@@ -1,17 +1,44 @@
+/** @format */
+
 #icons {
-    display: flex !important;
-    justify-content: flex-end
+	display: flex !important;
+	justify-content: flex-end;
 }
 
 h4 {
-    cursor: pointer;
-    padding: 1rem
+	cursor: pointer;
+	padding: 1rem;
 }
 
 .mr-20 {
-    margin-left: 20px;
+	margin-left: 20px;
 }
 
-.pb-6   {
-    padding-bottom: 6.5rem;
+.pb-6 {
+	padding-bottom: 6.5rem;
+}
+
+.svg__overflow {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.svg__display {
+	height: 250px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.svg__width {
+	cursor: pointer;
+	width: 31%;
+	margin: 5px;
+}
+
+.svg__icon {
+	pointer-events: none;
+}
+
+.svg__icon--active {
+	border: 2px solid gold;
 }

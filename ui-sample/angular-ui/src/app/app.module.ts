@@ -19,7 +19,7 @@ import { DefaultTemplateComponent } from './components/default-template/default-
 import { FormsModule, ReactiveFormsModule, } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { CreateCertificateComponent } from './components/create-certificate/create-certificate.component';
-
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 @NgModule({
   declarations: [
@@ -41,7 +41,8 @@ import { CreateCertificateComponent } from './components/create-certificate/crea
     SuiRatingModule, SuiCollapseModule, SuiCheckboxModule, SuiTabsModule,
     RouterModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AngularSvgIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]
