@@ -20,8 +20,8 @@
 					<div class="ui right attached segment" suiTabContent="1">
 						<p class="tac">Select Template</p>
 						<div class="svg__overflow svg__display">
-							<span class="svg__width" (click)="selectedSvgCert($event)" [id]="cert" *ngFor="let cert of showAllCerts">
-								<svg-icon class="svg__icon" [src]="cert" [stretch]="true"></svg-icon>
+							<span class="svg__width" (click)="selectedSvgCert($event)" [id]="certificate" *ngFor="let certificate of showAllCertsValues">
+								<svg-icon class="svg__icon" [src]="certificate" [stretch]="true"></svg-icon>
 							</span>
 						</div>
 						<!-- .svg Close -->

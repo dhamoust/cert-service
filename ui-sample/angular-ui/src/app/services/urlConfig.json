@@ -1,12 +1,13 @@
 {
     "URLS": {
-        "BASE_URL": "http://localhost:9000",
+        "BASE_URL": "http://eda1d171f0c1.ngrok.io",
         "SEARCH": "/search",
         "READ": "/read",
         "ADD": "/add",
         "UPDATE": "/update",
-        "GENERTATE_CERT": "/v1/certs/generate",
-        "DOWLOAD_PDF": "/v1/user/certs/download"
+        "GENERTATE_CERT": "/v2/certs/generate",
+        "DOWLOAD_PDF": "/v1/user/certs/download",
+        "SHOW_CERT": "/templates/svg"
     },
     "PAGE_LIMIT": 20
 }

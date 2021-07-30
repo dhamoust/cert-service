@@ -35,7 +35,7 @@
                 "displayProperty": "Editable",
                 "visible": true,
                 "renderingHints": {
-                    "semanticColumnWidth": "three"
+                    "semanticColumnWidth": "four"
                 },
                 "index": 2
             },
@@ -52,18 +52,47 @@
                 "displayProperty": "Editable",
                 "visible": true,
                 "renderingHints": {
-                    "semanticColumnWidth": "five"
+                    "semanticColumnWidth": "four"
                 },
                 "index": 3
+            },
+            {
+                "code": "recipientRegistrationNumber",
+                "dataType": "text",
+                "name": "recipientRegistrationNumber",
+                "label": "Recipient Registration Number",
+                "description": "Recipient Registration Number",
+                "editable": true,
+                "placeholder": "Recipient Registration Number",
+                "inputType": "text",
+                "required": false,
+                "displayProperty": "Editable",
+                "visible": true,
+                "renderingHints": {
+                    "semanticColumnWidth": "four"
+                },
+                "index": 4
+            },
+            {
+                "renderingHints": {
+                    "semanticColumnWidth": "four"
+                },
+                "index": 5
+            },
+            {
+                "renderingHints": {
+                    "semanticColumnWidth": "four"
+                },
+                "index": 6
             },
             {
                 "code": "courseName",
                 "dataType": "text",
                 "name": "courseName",
-                "label": "Training Name",
-                "description": "Training Name",
+                "label": "Course Name",
+                "description": "Course Name",
                 "editable": true,
-                "placeholder": "Training Name",
+                "placeholder": "Course Name",
                 "inputType": "text",
                 "required": true,
                 "displayProperty": "Editable",
@@ -71,7 +100,41 @@
                 "renderingHints": {
                     "semanticColumnWidth": "four"
                 },
-                "index": 4
+                "index": 7
+            },
+            {
+                "code": "courseLocation",
+                "dataType": "text",
+                "name": "courseLocation",
+                "label": "Course Location",
+                "description": "Course Location",
+                "editable": true,
+                "placeholder": "Course Location",
+                "inputType": "text",
+                "required": false,
+                "displayProperty": "Editable",
+                "visible": true,
+                "renderingHints": {
+                    "semanticColumnWidth": "four"
+                },
+                "index": 8
+            },
+            {
+                "code": "courseGrade",
+                "dataType": "text",
+                "name": "courseGrade",
+                "label": "Course Grade",
+                "description": "Course Grade",
+                "editable": true,
+                "placeholder": "Course Grade",
+                "inputType": "text",
+                "required": false,
+                "displayProperty": "Editable",
+                "visible": true,
+                "renderingHints": {
+                    "semanticColumnWidth": "four"
+                },
+                "index": 9
             },
             {
                 "code": "certificateName",
@@ -88,7 +151,7 @@
                 "renderingHints": {
                     "semanticColumnWidth": "four"
                 },
-                "index": 5
+                "index": 10
             },
             {
                 "code": "certificateDescription",
@@ -105,7 +168,24 @@
                 "renderingHints": {
                     "semanticColumnWidth": "four"
                 },
-                "index": 6
+                "index": 11
+            },
+            {
+                "code": "certificateNumber",
+                "dataType": "text",
+                "name": "certificateNumber",
+                "label": "Certificate Number",
+                "description": "Certificate Number",
+                "editable": true,
+                "placeholder": "Certificate Number",
+                "inputType": "text",
+                "required": false,
+                "displayProperty": "Editable",
+                "visible": true,
+                "renderingHints": {
+                    "semanticColumnWidth": "four"
+                },
+                "index": 12
             },
             {
                 "code": "name",
@@ -121,9 +201,9 @@
                 "visible": true,
                 "value": "NIIT",
                 "renderingHints": {
-                    "semanticColumnWidth": "six"
+                    "semanticColumnWidth": "four"
                 },
-                "index": 7
+                "index": 13
             },
             {
                 "code": "url",
@@ -139,9 +219,9 @@
                 "visible": true,
                 "value": "www.niit.com",
                 "renderingHints": {
-                    "semanticColumnWidth": "six"
+                    "semanticColumnWidth": "four"
                 },
-                "index": 8
+                "index": 14
             }
         ]
     }

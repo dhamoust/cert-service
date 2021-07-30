@@ -2,12 +2,12 @@ import { Component, OnInit, ViewChild, ViewChildren, QueryList, OnChanges } from
 import { DataService } from '../../services/data/data.service';
 import { ResourceService } from '../../services/resource/resource.service';
 import { FormService } from '../../services/forms/form.service';
+import { CertificateService } from '../../services/certificate/certificate.service';
 import { DefaultTemplateComponent } from '../default-template/default-template.component';
 import * as _ from 'lodash-es';
 import urlConfig from '../../services/urlConfig.json';
 import { CertReq, Store, Templates } from '../../services/interfaces/certificate';
 import { Router } from '@angular/router';
-import * as $ from 'jquery';
 
 @Component({
   selector: 'app-create-certificate',
@@ -21,6 +21,7 @@ export class CreateCertificateComponent implements OnInit {
   @ViewChild('storageForm') storageFormData: DefaultTemplateComponent;
   dataService: DataService;
   formService: FormService;
+  certificateService: CertificateService;
   resourceService: ResourceService;
   pdfUrl: string;
   public formFieldProperties: any;
@@ -34,27 +35,29 @@ export class CreateCertificateComponent implements OnInit {
   storageInfo: boolean = false;
   storageDetails = {};
   templateActive: boolean;
-  htmlTemplate: string;
+  htmlTemplateId: string;
   listOfTemplate: Array<Templates> = [];
   id: number = 1;
-  showAllCerts = [
-    '/assets/certificates/template-1.svg',
-    '/assets/certificates/template-2.svg',
-    // '/assets/certificates/template-3.svg',
-    // '/assets/certificates/template-4.svg',
-    // '/assets/certificates/template-5.svg',
-    // '/assets/certificates/template-6.svg',
-  ];
+  showAllCertsKeys = [];
+  showAllCertsValues = [];
   certSelected = [];
-  constructor(dataService: DataService, formService: FormService, resourceService: ResourceService, router: Router) {
+  certificateSelected;
+  constructor(dataService: DataService, formService: FormService, certificateService: CertificateService, resourceService: ResourceService, router: Router) {
     this.dataService = dataService;
     this.resourceService = resourceService;
     this.formService = formService;
+    this.certificateService = certificateService;
     this.router = router;
   }
 
   ngOnInit() {
     this.templateActive = true;
+    this.certificateService.getCertificateList().subscribe(res => {
+      this.showAllCertsKeys = Object.keys(res.result);
+      console.log(this.showAllCertsKeys);
+      this.showAllCertsValues = Object.values(res.result);
+      console.log(this.showAllCertsValues );
+    });
     this.formService.getFormConfig("certificate").subscribe(res => {
       this.formFieldProperties = res.fields;
       console.log(this.formFieldProperties);
@@ -87,7 +90,7 @@ export class CreateCertificateComponent implements OnInit {
         }
       },
       url: urlConfig.URLS.GENERTATE_CERT
-    }
+    };
     this.dataService.post(requestData).subscribe(res => {
       console.log('certificate generated successfully', res)
       this.pdfUrl = res.result.response[0].pdfUrl;
@@ -109,10 +112,16 @@ export class CreateCertificateComponent implements OnInit {
       data: [],
       issuer: {},
       signatoryList: [],
-      htmlTemplate: '',
+      htmlTemplateId: '',
+      svgTemplateId: '',
       courseName: '',
+      location: '',
+      courseGrade: '',
       name: '',
-      description: ''
+      description: '',
+      certificateNum: '',
+      studentRegNo: '',
+
     };
     const data = [{
       recipientName: requestData.recipientName,
@@ -133,10 +142,16 @@ export class CreateCertificateComponent implements OnInit {
     certificate.issuer = issuer;
     certificate.signatoryList = signatoryList;
     // certificate.htmlTemplate = this.htmlTemplate;
-    certificate.htmlTemplate = `${window.location.origin}${this.certSelected[0]}`;
+    certificate.htmlTemplateId = this.showAllCertsKeys[this.certificateSelected];
+    certificate.svgTemplateId = this.showAllCertsKeys[this.certificateSelected];
     certificate.courseName = requestData.courseName;
+    certificate.location = requestData.courseLocation;
+    certificate.courseGrade = requestData.courseGrade;
     certificate.name = requestData.certificateName;
     certificate.description = requestData.certificateDescription;
+    certificate.certificateNum = requestData.certificateNumber;
+    certificate.studentRegNo = requestData.recipientRegistrationNumber;
+
     if (this.preview) {
       certificate['preview'] = "true";
       this.preview = false;
@@ -204,17 +219,21 @@ export class CreateCertificateComponent implements OnInit {
           event.target.classList.add('svg__icon--active');
           this.certSelected.pop();
           this.certSelected.push(event.target.id);
+          this.certificateSelected = this.showAllCertsValues.indexOf(event.target.id);
         }
       } else {
         event.target.classList.remove('svg__icon--active');
         this.certSelected.pop();
+        this.certificateSelected = '';
       }
     } else {
       if(!event.target.classList.contains('svg__icon--active')) {
         event.target.classList.add('svg__icon--active');
         this.certSelected.push(event.target.id);
+        this.certificateSelected = this.showAllCertsValues.indexOf(event.target.id);
       }
     }
     console.log(this.certSelected);
+    console.log(this.showAllCertsKeys[this.certificateSelected]);
   }
 }
