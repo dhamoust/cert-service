@@ -38,8 +38,9 @@ export class CreateCertificateComponent implements OnInit {
   listOfTemplate: Array<Templates> = [];
   id: number = 1;
   showAllCerts = [
-    '/assets/certificates/template-1.svg',
-    '/assets/certificates/template-2.svg',
+    '/assets/certificates/participateCertificate.svg',
+    '/assets/certificates/meritCertificate.svg'
+
     // '/assets/certificates/template-3.svg',
     // '/assets/certificates/template-4.svg',
     // '/assets/certificates/template-5.svg',
@@ -197,9 +198,9 @@ export class CreateCertificateComponent implements OnInit {
 
   selectedSvgCert(event) {
     event.stopPropagation();
-    if(this.certSelected.length > 0) {
-      if(this.certSelected[0] !== event.target.id) {
-        if(!event.target.classList.contains('svg__icon--active')) {
+    if (this.certSelected.length > 0) {
+      if (this.certSelected[0] !== event.target.id) {
+        if (!event.target.classList.contains('svg__icon--active')) {
           document.getElementById(this.certSelected[0]).classList.remove('svg__icon--active');
           event.target.classList.add('svg__icon--active');
           this.certSelected.pop();
@@ -210,7 +211,7 @@ export class CreateCertificateComponent implements OnInit {
         this.certSelected.pop();
       }
     } else {
-      if(!event.target.classList.contains('svg__icon--active')) {
+      if (!event.target.classList.contains('svg__icon--active')) {
         event.target.classList.add('svg__icon--active');
         this.certSelected.push(event.target.id);
       }
