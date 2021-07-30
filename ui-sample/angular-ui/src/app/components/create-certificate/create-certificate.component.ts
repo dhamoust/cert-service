@@ -40,10 +40,10 @@ export class CreateCertificateComponent implements OnInit {
   showAllCerts = [
     '/assets/certificates/template-1.svg',
     '/assets/certificates/template-2.svg',
-    '/assets/certificates/template-3.svg',
-    '/assets/certificates/template-4.svg',
-    '/assets/certificates/template-5.svg',
-    '/assets/certificates/template-6.svg',
+    // '/assets/certificates/template-3.svg',
+    // '/assets/certificates/template-4.svg',
+    // '/assets/certificates/template-5.svg',
+    // '/assets/certificates/template-6.svg',
   ];
   certSelected = [];
   constructor(dataService: DataService, formService: FormService, resourceService: ResourceService, router: Router) {
