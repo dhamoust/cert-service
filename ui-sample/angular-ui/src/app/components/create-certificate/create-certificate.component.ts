@@ -212,9 +212,9 @@ export class CreateCertificateComponent implements OnInit {
 
   selectedSvgCert(event) {
     event.stopPropagation();
-    if(this.certSelected.length > 0) {
-      if(this.certSelected[0] !== event.target.id) {
-        if(!event.target.classList.contains('svg__icon--active')) {
+    if (this.certSelected.length > 0) {
+      if (this.certSelected[0] !== event.target.id) {
+        if (!event.target.classList.contains('svg__icon--active')) {
           document.getElementById(this.certSelected[0]).classList.remove('svg__icon--active');
           event.target.classList.add('svg__icon--active');
           this.certSelected.pop();
@@ -227,7 +227,7 @@ export class CreateCertificateComponent implements OnInit {
         this.certificateSelected = '';
       }
     } else {
-      if(!event.target.classList.contains('svg__icon--active')) {
+      if (!event.target.classList.contains('svg__icon--active')) {
         event.target.classList.add('svg__icon--active');
         this.certSelected.push(event.target.id);
         this.certificateSelected = this.showAllCertsValues.indexOf(event.target.id);
