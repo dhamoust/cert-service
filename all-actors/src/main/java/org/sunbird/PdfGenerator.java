@@ -78,6 +78,7 @@ public class PdfGenerator {
         storageParams.put(JsonKey.containerName,container);
         storageParams.put(JsonKey.PATH,path);
         request.put("storageParams",storageParams);
+        logger.info("Print service request : ======================= :"+ request);
         String pdfUrl = callPrintService(printServiceReq);
         String [] arr = pdfUrl.split("/");
         long endTime = System.currentTimeMillis();

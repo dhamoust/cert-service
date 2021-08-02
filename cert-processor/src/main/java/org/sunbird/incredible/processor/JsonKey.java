@@ -119,6 +119,8 @@ public interface JsonKey {
     String SVG_TEMPLATE = "svgTemplate";
     String SVG_TEMPLATE_ID = "svgTemplateId";
     String LOCATION = "location";
+    String STUDENT_REG_NUM = "studentRegNo";
+    String CERTIFICATE_NUM = "certificateNum";
 
     String REQ_ID = "reqId";
     String REQUEST_MESSAGE_ID = "msgId";

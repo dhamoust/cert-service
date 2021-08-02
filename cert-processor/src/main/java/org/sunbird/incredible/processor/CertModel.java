@@ -43,6 +43,10 @@ public class CertModel {
      */
     private Criteria criteria;
 
+    private String location;
+    private String studentRegNo;
+    private String certificateNum;
+
     private static ObjectMapper mapper = new ObjectMapper();
 
     public CertModel() {
@@ -178,6 +182,32 @@ public class CertModel {
 
     public void setCriteria(Criteria criteria) {
         this.criteria = criteria;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public CertModel setLocation(String location) {
+        this.location = location;
+        return this;
+    }
+
+    public String getStudentRegNo() {
+        return studentRegNo;
+    }
+
+    public CertModel setStudentRegNo(String studentRegNo) {
+        this.studentRegNo = studentRegNo;
+        return this;
+    }
+    public String getCertificateNum() {
+        return certificateNum;
+    }
+
+    public CertModel setCertificateNum(String certificateNum) {
+        this.certificateNum = certificateNum;
+        return this;
     }
 
     @Override

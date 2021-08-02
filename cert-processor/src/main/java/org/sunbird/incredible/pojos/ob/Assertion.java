@@ -60,6 +60,12 @@ public class Assertion extends OBBase {
      */
     private String revocationReason;
 
+    private String location;
+
+    private String studentRegNo;
+
+    private String certificateNum;
+
     public Assertion() {
     }
 
@@ -73,6 +79,30 @@ public class Assertion extends OBBase {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getStudentRegNo() {
+        return studentRegNo;
+    }
+
+    public void setStudentRegNo(String studentRegNo) {
+        this.studentRegNo = studentRegNo;
+    }
+
+    public String getCertificateNum() {
+        return certificateNum;
+    }
+
+    public void setCertificateNum(String certificateNum) {
+        this.certificateNum = certificateNum;
     }
 
     public String[] getType() {

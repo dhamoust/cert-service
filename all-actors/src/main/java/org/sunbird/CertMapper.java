@@ -40,6 +40,9 @@ public class CertMapper {
             cert.setIssuer(issuer);
             cert.setSignatoryList(signatoryArr);
             cert.setCourseName((String) json.get(JsonKey.COURSE_NAME));
+            cert.setLocation((String) json.get(JsonKey.LOCATION));
+            cert.setStudentRegNo((String) json.get(JsonKey.STUDENT_REG_NUM));
+            cert.setCertificateNum((String) json.get(JsonKey.CERTIFICATE_NUM));
             cert.setCertificateDescription((String) json.get(JsonKey.DESCRIPTION));
             cert.setCertificateLogo((String) json.get(JsonKey.LOGO));
             cert.setCriteria(criteria);
