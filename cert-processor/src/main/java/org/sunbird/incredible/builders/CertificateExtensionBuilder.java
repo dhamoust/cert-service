@@ -85,6 +85,20 @@ public class CertificateExtensionBuilder implements IBuilder<CertificateExtensio
         return this;
     }
 
+    public CertificateExtensionBuilder setLocation(String location) {
+        certificateExtension.setLocation(location);
+        return this;
+    }
+
+    public CertificateExtensionBuilder setStudentRegNo(String studentRegNo) {
+        certificateExtension.setStudentRegNo(studentRegNo);
+        return this;
+    }
+
+    public CertificateExtensionBuilder setCertificateNum(String certificateNum) {
+        certificateExtension.setCertificateNum(certificateNum);
+        return this;
+    }
 
     @Override
     public CertificateExtension build() {

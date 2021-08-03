@@ -34,7 +34,9 @@ public class HTMLVars {
         $courseName,
         $qrCodeImage,
         $issuerName,
-        $location
+        $location,
+        $studentRegNo,
+        $certificateNum
     }
 }
 

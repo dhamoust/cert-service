@@ -115,8 +115,9 @@ public class CertificateGeneratorActor extends BaseActor {
     }
 
     private void generateCertificate(Request request) throws BaseException {
-        logger.info(request.getRequestContext(), "Request received== {}", request.getRequest());
+        logger.info(request.getRequestContext(), "Request received====== {}", request.getRequest());
         Map<String, String> properties = populatePropertiesMap(request);
+        logger.info(request.getRequestContext(), "Properties ====== {}", properties);
 
         CertStoreFactory certStoreFactory = new CertStoreFactory(properties);
         StoreConfig storeParams = new StoreConfig(getStorageParamsFromRequestOrEnv((Map<String, Object>) ((Map) request.get(JsonKey.CERTIFICATE)).get(JsonKey.STORE)));
@@ -268,6 +269,9 @@ public class CertificateGeneratorActor extends BaseActor {
             logger.info(request.getRequestContext(), "populatePropertiesMap: keys after {}", keyId);
         }
         properties.put(JsonKey.TAG, tag);
+        properties.put(JsonKey.LOCATION,(String) ((Map) request.get(JsonKey.CERTIFICATE)).get(JsonKey.LOCATION));
+        properties.put(JsonKey.STUDENT_REG_NUM,(String) ((Map) request.get(JsonKey.CERTIFICATE)).get(JsonKey.STUDENT_REG_NUM));
+        properties.put(JsonKey.CERTIFICATE_NUM,(String) ((Map) request.get(JsonKey.CERTIFICATE)).get(JsonKey.CERTIFICATE_NUM));
         properties.put(JsonKey.CONTAINER_NAME, certVar.getCONTAINER_NAME());
         properties.put(JsonKey.BADGE_URL, certVar.getBADGE_URL(tag));
         properties.put(JsonKey.ISSUER_URL, certVar.getISSUER_URL());

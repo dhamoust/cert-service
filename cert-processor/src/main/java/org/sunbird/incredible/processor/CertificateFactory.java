@@ -86,6 +86,20 @@ public class CertificateFactory {
             certificateExtensionBuilder.setEvidence(trainingEvidenceBuilder.build());
         }
 
+        if (StringUtils.isNotBlank(certModel.getLocation())) {
+            certificateExtensionBuilder.setLocation(properties.get(JsonKey.LOCATION));
+        }
+
+
+        if (StringUtils.isNotBlank(certModel.getStudentRegNo())) {
+            certificateExtensionBuilder.setStudentRegNo(properties.get(JsonKey.STUDENT_REG_NUM));
+
+        }
+
+
+        if (StringUtils.isNotBlank(certModel.getCertificateNum())) {
+            certificateExtensionBuilder.setCertificateNum(properties.get(JsonKey.CERTIFICATE_NUM));
+        }
         /**
          *
          * Certificate extension object
