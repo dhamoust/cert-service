@@ -423,8 +423,9 @@ public class ElasticSearchUtil {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("niitParticipationSvg","https://sunbird1dev1private.blob.core.windows.net/reports/print-service/niitParticipation.svg");
-		map.put("niitMeritSvg", "https://sunbird1dev1private.blob.core.windows.net/reports/print-service/niitMerit.svg");
-		map.put("niitParticipationHtml","https://sunbird1dev1public.blob.core.windows.net/public/print-service/RishabCertificate.zip");
+		map.put("niitMeritSvg", "https://sunbird1dev1private.blob.core.windows.net/reports/print-service/meritCertificate.svg");
+		map.put("niitMeritCertificateHtml","https://sunbird1dev1public.blob.core.windows.net/public/print-service/RishabCertificate.zip");
+		map.put("niitMeritHtml","https://sunbird1dev1public.blob.core.windows.net/public/print-service/niitMeritHtml.zip");
 		future.complete(map);
 				/*	put("identifier", indexResponse.getId());
 				}});

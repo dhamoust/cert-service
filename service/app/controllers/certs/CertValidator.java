@@ -51,6 +51,13 @@ public class CertValidator {
         if (StringUtils.isNotBlank(basePath)) {
             validateBasePath(basePath);
         }
+        String marks = (String) certReq.get(JsonKey.MARKS);
+        if (StringUtils.isNotBlank(marks)) {
+            double intMarks = Double.parseDouble(marks);
+            if (intMarks != 0) {
+                validateMarks(intMarks);
+            }
+        }
         if (certReq.containsKey(JsonKey.STORE)) {
             validateStore((Map<String, Object>) certReq.get(JsonKey.STORE));
         }
@@ -182,6 +189,12 @@ public class CertValidator {
                     MessageFormat.format(IResponseMessage.INVALID_PARAM_VALUE, basePath, JsonKey.CERTIFICATE
                             + "." + JsonKey.BASE_PATH),
                     ResponseCode.CLIENT_ERROR.getCode());
+        }
+    }
+
+    private void validateMarks(double marks) throws BaseException {
+        if (marks > 100 || marks < 0) {
+            throw new BaseException("INVALID_PARAM_VALUE", MessageFormat.format(IResponseMessage.INVALID_PARAM_VALUE, marks, JsonKey.MARKS), ResponseCode.BAD_REQUEST.getCode());
         }
     }
 

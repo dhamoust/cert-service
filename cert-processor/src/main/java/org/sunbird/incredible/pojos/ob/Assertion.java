@@ -66,6 +66,8 @@ public class Assertion extends OBBase {
 
     private String certificateNum;
 
+    private String implication;
+
     public Assertion() {
     }
 
@@ -103,6 +105,14 @@ public class Assertion extends OBBase {
 
     public void setCertificateNum(String certificateNum) {
         this.certificateNum = certificateNum;
+    }
+
+    public String getImplication() {
+        return implication;
+    }
+
+    public void setImplication(String implication) {
+        this.implication = implication;
     }
 
     public String[] getType() {

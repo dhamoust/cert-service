@@ -3,6 +3,14 @@ package org.sunbird.cert.actor;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.FileReader;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.*;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -34,6 +42,8 @@ import org.sunbird.response.Response;
 import scala.Some;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -114,11 +124,35 @@ public class CertificateGeneratorActor extends BaseActor {
         return Integer.parseInt(timeoutInSecondsStr);
     }
 
-    private void generateCertificate(Request request) throws BaseException {
+    private void generateCertificate(Request request) throws BaseException, IOException, ParseException {
         logger.info(request.getRequestContext(), "Request received====== {}", request.getRequest());
         Map<String, String> properties = populatePropertiesMap(request);
         logger.info(request.getRequestContext(), "Properties ====== {}", properties);
+        String reqMarks = properties.get(JsonKey.MARKS);
+        if (reqMarks != null) {
+            double marks = Double.parseDouble(properties.get(JsonKey.MARKS));
+//        if (marks >= 60 && marks < 70) properties.put(JsonKey.IMPLICATION, "Good");
+//        else if (marks >= 70 && marks < 80) properties.put(JsonKey.IMPLICATION, "Very Good");
+//        else if (marks >= 80 && marks < 90) properties.put(JsonKey.IMPLICATION, "Excellent");
+//        else if (marks >= 90 && marks <= 100) properties.put(JsonKey.IMPLICATION, "Outstanding");
+//        else properties.put(JsonKey.IMPLICATION,"failed");
+            logger.info(request.getRequestContext(), "Marks value ====== {}", marks);
+            Object obj = new JSONParser().parse(new FileReader("/Users/apple/Sunbird-Stackroute/cert-service/service/conf/grade_management.json"));
+            logger.info(request.getRequestContext(), "Parsed value ====== {}", obj);
 
+            // typecasting obj to JSONObject
+            JSONObject jo = (JSONObject) obj;
+            List<Map<String, Object>> range = ((List<Map<String, Object>>) jo.get("niitMeritCertificateHtml"));
+            for (Map<String, Object> map : range) {
+                double lowerLimit = Double.parseDouble((String) map.get(JsonKey.LOWER_LIMIT));
+                double upperLimit = Double.parseDouble((String) map.get(JsonKey.UPPER_LIMIT));
+                if (marks >= lowerLimit && marks <= upperLimit) {
+                    properties.put(JsonKey.IMPLICATION, (String) map.get(JsonKey.INTERPRETITION));
+                }
+            }
+        } else {
+            StringUtils.isNotBlank(reqMarks);
+        }
         CertStoreFactory certStoreFactory = new CertStoreFactory(properties);
         StoreConfig storeParams = new StoreConfig(getStorageParamsFromRequestOrEnv((Map<String, Object>) ((Map) request.get(JsonKey.CERTIFICATE)).get(JsonKey.STORE)));
         ICertStore certStore = certStoreFactory.getCertStore(storeParams, BooleanUtils.toBoolean(properties.get(JsonKey.PREVIEW)));
@@ -161,9 +195,35 @@ public class CertificateGeneratorActor extends BaseActor {
         logger.info(request.getRequestContext(), "onReceive method call End");
     }
 
-    private void generateCertificateV2(Request request) throws BaseException {
+    private void generateCertificateV2(Request request) throws BaseException, IOException, ParseException {
         logger.info(request.getRequestContext(), "generateCertificateV2 request received== {}" + request.getRequest());
         Map<String, String> properties = populatePropertiesMap(request);
+        logger.info(request.getRequestContext(), "Properties ====== {}", properties);
+        String reqMarks = properties.get(JsonKey.MARKS);
+        if (reqMarks != null) {
+            double marks = Double.parseDouble(properties.get(JsonKey.MARKS));
+//        if (marks >= 60 && marks < 70) properties.put(JsonKey.IMPLICATION, "Good");
+//        else if (marks >= 70 && marks < 80) properties.put(JsonKey.IMPLICATION, "Very Good");
+//        else if (marks >= 80 && marks < 90) properties.put(JsonKey.IMPLICATION, "Excellent");
+//        else if (marks >= 90 && marks <= 100) properties.put(JsonKey.IMPLICATION, "Outstanding");
+//        else properties.put(JsonKey.IMPLICATION,"failed");
+            logger.info(request.getRequestContext(), "Marks value ====== {}", marks);
+            Object obj = new JSONParser().parse(new FileReader("/Users/apple/Sunbird-Stackroute/cert-service/service/conf/niitMeritSvg.json"));
+            logger.info(request.getRequestContext(), "Parsed value ====== {}", obj);
+
+            // typecasting obj to JSONObject
+            JSONObject jo = (JSONObject) obj;
+            List<Map<String, Object>> range = ((List<Map<String, Object>>) jo.get("niitMeritSvg"));
+            for (Map<String, Object> map : range) {
+                double lowerLimit = Double.parseDouble((String) map.get(JsonKey.LOWER_LIMIT));
+                double upperLimit = Double.parseDouble((String) map.get(JsonKey.UPPER_LIMIT));
+                if (marks >= lowerLimit && marks <= upperLimit) {
+                    properties.put(JsonKey.IMPLICATION, (String) map.get(JsonKey.INTERPRETITION));
+                }
+            }
+        } else {
+            StringUtils.isNotBlank(reqMarks);
+        }
         CertMapper certMapper = new CertMapper(properties);
         List<CertModel> certModelList = certMapper.toList(request.getRequest());
         CertificateGenerator certificateGenerator = new CertificateGenerator(properties, directory);
@@ -272,6 +332,7 @@ public class CertificateGeneratorActor extends BaseActor {
         properties.put(JsonKey.LOCATION,(String) ((Map) request.get(JsonKey.CERTIFICATE)).get(JsonKey.LOCATION));
         properties.put(JsonKey.STUDENT_REG_NUM,(String) ((Map) request.get(JsonKey.CERTIFICATE)).get(JsonKey.STUDENT_REG_NUM));
         properties.put(JsonKey.CERTIFICATE_NUM,(String) ((Map) request.get(JsonKey.CERTIFICATE)).get(JsonKey.CERTIFICATE_NUM));
+        properties.put(JsonKey.MARKS,(String) ((Map) request.get(JsonKey.CERTIFICATE)).get(JsonKey.MARKS));
         properties.put(JsonKey.CONTAINER_NAME, certVar.getCONTAINER_NAME());
         properties.put(JsonKey.BADGE_URL, certVar.getBADGE_URL(tag));
         properties.put(JsonKey.ISSUER_URL, certVar.getISSUER_URL());
