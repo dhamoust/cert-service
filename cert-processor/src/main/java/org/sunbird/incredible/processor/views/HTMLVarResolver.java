@@ -130,6 +130,9 @@ public class HTMLVarResolver {
         return certificateExtension.getCertificateNum();
     }
 
+    public String getImplication() {
+        return certificateExtension.getImplication();
+    }
 
     public Map<String, String> getCertMetaData() {
         Map<String, String> metaData = new HashMap<>();
@@ -149,6 +152,7 @@ public class HTMLVarResolver {
             metaData.put(JsonKey.LOCATION, urlEncode(getLocation()));
             metaData.put(JsonKey.STUDENT_REG_NUM, urlEncode(getStudentRegNo()));
             metaData.put(JsonKey.CERTIFICATE_NUM, urlEncode(getCertificateNum()));
+            metaData.put(JsonKey.IMPLICATION,urlEncode(getImplication()));
 
         } catch (UnsupportedEncodingException e) {
             logger.info("getCertMetaData: exception occurred while url encoding {}", e.getMessage());

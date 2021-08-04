@@ -36,7 +36,8 @@ public class HTMLVars {
         $issuerName,
         $location,
         $studentRegNo,
-        $certificateNum
+        $certificateNum,
+        $implication
     }
 }
 

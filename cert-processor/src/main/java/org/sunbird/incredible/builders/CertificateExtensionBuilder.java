@@ -100,6 +100,10 @@ public class CertificateExtensionBuilder implements IBuilder<CertificateExtensio
         return this;
     }
 
+    public CertificateExtensionBuilder setImplication(String implication) {
+        certificateExtension.setImplication(implication);
+        return this;
+    }
     @Override
     public CertificateExtension build() {
         return certificateExtension;

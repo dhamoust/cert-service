@@ -100,6 +100,10 @@ public class CertificateFactory {
         if (StringUtils.isNotBlank(certModel.getCertificateNum())) {
             certificateExtensionBuilder.setCertificateNum(properties.get(JsonKey.CERTIFICATE_NUM));
         }
+
+        if (StringUtils.isNotBlank(certModel.getImplication())) {
+            certificateExtensionBuilder.setImplication(properties.get(JsonKey.IMPLICATION));
+        }
         /**
          *
          * Certificate extension object

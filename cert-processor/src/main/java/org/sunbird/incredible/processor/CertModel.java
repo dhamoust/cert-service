@@ -46,7 +46,7 @@ public class CertModel {
     private String location;
     private String studentRegNo;
     private String certificateNum;
-
+    private String implication;
     private static ObjectMapper mapper = new ObjectMapper();
 
     public CertModel() {
@@ -207,6 +207,15 @@ public class CertModel {
 
     public CertModel setCertificateNum(String certificateNum) {
         this.certificateNum = certificateNum;
+        return this;
+    }
+
+    public String getImplication() {
+        return implication;
+    }
+
+    public CertModel setImplication(String implication) {
+        this.implication = implication;
         return this;
     }
 

@@ -121,7 +121,11 @@ public interface JsonKey {
     String LOCATION = "location";
     String STUDENT_REG_NUM = "studentRegNo";
     String CERTIFICATE_NUM = "certificateNum";
-
+    String MARKS = "marks";
+    String IMPLICATION = "implication";
+    String INTERPRETITION = "interpretation";
+    String LOWER_LIMIT = "lowerLimit";
+    String UPPER_LIMIT = "upperLimit";
     String REQ_ID = "reqId";
     String REQUEST_MESSAGE_ID = "msgId";
     String X_REQUEST_ID = "X-Request-ID";
