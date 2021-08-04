@@ -21,4 +21,19 @@ export class CertificateService {
       })
     );
   }
+
+  // public getNotificationToUser() {
+  //   return this.http.get(``).pipe(map((response: any) => {
+  //     return response;
+  //   }),
+  //     catchError((err) => {
+  //       return err;
+  //     })
+  //   );
+  // }
+
+
+
 }
+
+
