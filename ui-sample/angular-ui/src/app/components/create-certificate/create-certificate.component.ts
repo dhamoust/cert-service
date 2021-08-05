@@ -8,6 +8,7 @@ import * as _ from 'lodash-es';
 import urlConfig from '../../services/urlConfig.json';
 import { CertReq, Store, Templates } from '../../services/interfaces/certificate';
 import { Router } from '@angular/router';
+import { IEmailCertificate } from 'src/app/services/email-certificate.model';
 
 @Component({
   selector: 'app-create-certificate',
@@ -42,6 +43,7 @@ export class CreateCertificateComponent implements OnInit {
   showAllCertsValues = [];
   certSelected = [];
   certificateSelected;
+  emailCertificateObject: IEmailCertificate;
   constructor(dataService: DataService, formService: FormService, certificateService: CertificateService, resourceService: ResourceService, router: Router) {
     this.dataService = dataService;
     this.resourceService = resourceService;
@@ -51,12 +53,13 @@ export class CreateCertificateComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.templateActive = true;
     this.certificateService.getCertificateList().subscribe(res => {
       this.showAllCertsKeys = Object.keys(res.result);
       console.log(this.showAllCertsKeys);
       this.showAllCertsValues = Object.values(res.result);
-      console.log(this.showAllCertsValues );
+      console.log(this.showAllCertsValues);
     });
     this.formService.getFormConfig("certificate").subscribe(res => {
       this.formFieldProperties = res.fields;
@@ -92,13 +95,24 @@ export class CreateCertificateComponent implements OnInit {
       url: urlConfig.URLS.GENERTATE_CERT
     };
     this.dataService.post(requestData).subscribe(res => {
+      console.log("RESPONSE", res)
       console.log('certificate generated successfully', res)
+
       this.pdfUrl = res.result.response[0].pdfUrl;
       if (this.pdfUrl.startsWith("http")) {
         window.open(this.pdfUrl, '_blank');
       } else {
         this.dowloadPdf();
       }
+      const emailnotifier = {
+        pdfUrl: this.pdfUrl,
+        courseName: certificateData.courseName,
+        recipientEmail: certificateData.data[0].recipientEmail,
+        recipientName: certificateData.data[0].recipientName
+
+      }
+      this.notifyUser(emailnotifier);
+
     });
   }
   /**
@@ -209,6 +223,16 @@ export class CreateCertificateComponent implements OnInit {
     this.preview = true;
     this.createCertificate();
   }
+
+
+
+  notifyUser(emailCertificateObject) {
+    console.log("emailCertificateObject componet", emailCertificateObject)
+    this.certificateService.sendNotificationToUser(emailCertificateObject).subscribe(data => {
+      console.log("DATA", data);
+    })
+  }
+
 
   selectedSvgCert(event) {
     event.stopPropagation();

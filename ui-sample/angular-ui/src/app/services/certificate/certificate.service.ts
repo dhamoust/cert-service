@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import urlConfig from '../urlConfig.json';
+import { IEmailCertificate } from '../email-certificate.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,15 +23,22 @@ export class CertificateService {
     );
   }
 
-  // public getNotificationToUser() {
-  //   return this.http.get(``).pipe(map((response: any) => {
-  //     return response;
-  //   }),
-  //     catchError((err) => {
-  //       return err;
-  //     })
-  //   );
-  // }
+
+
+
+  sendNotificationToUser(emailCertificate: IEmailCertificate): Observable<any> {
+
+    console.log("emailCertificateObject", emailCertificate);
+    const headers = { 'content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    const requestBody = emailCertificate;
+    console.log("requestBody", requestBody)
+    return this.http.post(`http://f249983c6352.ngrok.io/user/email`, requestBody, { 'headers': headers })
+
+
+  }
+
+
+
 
 
 
