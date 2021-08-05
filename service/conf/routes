@@ -23,3 +23,4 @@ PATCH /cert/v1/template/update/:identifier @controllers.certs.CertTemplateContro
 GET /cert/v1/template/read/:identifier @controllers.certs.CertTemplateController.read(identifier: String, request: play.mvc.Http.Request)
 
 GET  /templates/svg                                 @controllers.certs.CertTemplateController.getTemplates()
+POST /user/email                                    @controllers.certs.CertTemplateController.sendEmail(request: play.mvc.Http.Request)

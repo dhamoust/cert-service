@@ -8,6 +8,7 @@ public class CertificateResponse {
     private Map<String, Object> jsonData;
     private String recipientId;
     private String jsonUrl;
+    private String svgUrl;
 
     public CertificateResponse(String id, String accessCode, String recipientId, Map<String, Object> jsonData) {
         this.id = id;
@@ -54,6 +55,14 @@ public class CertificateResponse {
 
     public void setJsonUrl(String jsonUrl) {
         this.jsonUrl = jsonUrl;
+    }
+
+    public String getSvgUrl() {
+        return svgUrl;
+    }
+
+    public void setSvgUrl(String svgUrl) {
+        this.svgUrl = svgUrl;
     }
 
 }

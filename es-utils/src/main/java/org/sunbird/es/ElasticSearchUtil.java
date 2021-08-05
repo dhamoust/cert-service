@@ -3,28 +3,23 @@
  */
 package org.sunbird.es;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.ActionListener;
-import org.sunbird.common.Platform;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
-
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
@@ -42,8 +37,12 @@ import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.sunbird.common.Platform;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * @author pradyumna
@@ -438,6 +437,40 @@ public class ElasticSearchUtil {
 		return future;
 	}
 
+
+	public static CompletableFuture sendGridEmail(String pdfUrl, String recipientId, String recipientName, String courseName) throws Exception {
+		CompletableFuture future = new CompletableFuture();
+
+		Email from = new Email("");
+		from.setName("StackRoute Certification Service");
+		Email to = new Email(recipientId);
+		String subject = "Download your certificate here";
+		String body = "Dear " + recipientName + ",<br/></br>" + "\n" + "<p>Congratulations, you have successfully completed a course titled : " + "\n" + courseName + "\n" + ".</p> </br></br>" + "<p> You can download your certificate by following below link.</p>" + "\n" + "</br></br>" + pdfUrl + "\n" + "<p></br></br>" + "Sincere Regards,</p>" + "<p></br>" + "NIIT Ltd</p>";
+		Content content = new Content("text/html", body);
+
+		Mail mail = new Mail(from, subject, to, content);
+
+		SendGrid sg = new SendGrid("");
+		Request request = new Request();
+
+		request.setMethod(Method.POST);
+		request.setEndpoint("mail/send");
+		request.setBody(mail.build());
+
+		com.sendgrid.Response response = sg.api(request);
+
+		System.out.println(response.getStatusCode());
+		System.out.println(response.getHeaders());
+		System.out.println(response.getBody());
+		if (response.getStatusCode() != 202) {
+			throw new Exception(response.getBody());
+		}
+		Map res = new HashMap();
+		res.put("statusCode", response.getStatusCode());
+		res.put("status", "Mail has been sent successfully !!");
+		future.complete(res);
+		return future;
+	}
 
 
 }
