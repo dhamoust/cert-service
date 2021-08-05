@@ -56,7 +56,19 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.10.0</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>4.4.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-http-core_2.11</artifactId>
+            <version>10.1.8</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 	<build>
 		<pluginManagement>
 			<plugins>

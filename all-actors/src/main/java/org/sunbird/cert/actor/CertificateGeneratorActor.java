@@ -241,9 +241,11 @@ public class CertificateGeneratorActor extends BaseActor {
                 SvgGenerator svgGenerator = new SvgGenerator((String) ((Map) request.get(JsonKey.CERTIFICATE)).get(JsonKey.SVG_TEMPLATE), directory);
                 String encodedSvg = svgGenerator.generate(certificateExtension, encodedQrCode);
                 certificateExtension.setPrintUri(encodedSvg);
+//                String svgUrl = uploadSvg(encodedSvg, uuid, certStore, certStoreFactory.setCloudPath(storeParams));
                 String jsonUrl = uploadJson(certificateExtension, uuid , certStore, certStoreFactory.setCloudPath(storeParams));
                 CertificateResponse certificateResponse = new CertificateResponse(certificateGenerator.getUUID(certificateExtension), (String) qrMap.get(JsonKey.ACCESS_CODE), certModel.getIdentifier(), mapper.convertValue(certificateExtension, Map.class));
                 certificateResponse.setJsonUrl(properties.get(JsonKey.BASE_PATH).concat(jsonUrl));
+//                certificateResponse.setSvgUrl(properties.get(JsonKey.BASE_PATH).concat(svgUrl));
                 certUrlList.add(mapper.convertValue(certificateResponse, new TypeReference<Map<String, Object>>() {
                 }));
             } catch (Exception ex) {
@@ -305,6 +307,13 @@ public class CertificateGeneratorActor extends BaseActor {
         File file = FileUtils.getFile(fileName.concat(".json"));
         resMap.put(JsonKey.JSON_URL, certStore.save(file, cloudPath));
         return resMap;
+    }
+
+    private String uploadSvg(String encodedSvg, String uuid, ICertStore certStore, String cloudPath) throws IOException {
+        logger.info(null, "uploadJson: uploading json file started {}", uuid);
+        File file = new File(directory + uuid + ".svg");
+        mapper.writeValue(file, encodedSvg);
+        return certStore.save(file, cloudPath);
     }
 
     private String uploadJson(CertificateExtension certificateExtension, String uuid, ICertStore certStore, String cloudPath) throws IOException {
