@@ -32,7 +32,7 @@ export class CertificateService {
     const headers = { 'content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     const requestBody = emailCertificate;
     console.log("requestBody", requestBody)
-    return this.http.post(`http://f249983c6352.ngrok.io/user/email`, requestBody, { 'headers': headers })
+    return this.http.post(`${urlConfig.URLS.BASE_URL}${urlConfig.URLS.EMAIL_NOTIFICATION}`, requestBody, { 'headers': headers })
 
 
   }
