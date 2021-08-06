@@ -14,6 +14,7 @@
 						<a class="item" suiTabHeader="4" [(isActive)]="storageTab">Storage Info</a>
 						<a class="item" suiTabHeader="5" [(isActive)]="generateTab"
 							[isDisabled]="thirdDisabled">Preview/Generate</a>
+						<a class="item" suiTabHeader="6" [(isActive)]="notifyTab">Notification</a>
 					</div>
 				</div>
 
@@ -80,14 +81,34 @@
 							<button class="mr-20 sb-btn sb-btn-normal primary" (click)="createCertificate()">
 								{{ resourceService?.frmelmnts?.btn?.generate }}
 							</button>
-							<br>
+							<!-- <br>
 							<br>
 							<div>
 
 								<span>
 									<sui-checkbox>Notify to the user</sui-checkbox>
 								</span>
-							</div>
+							</div> -->
+						</div>
+					</div>
+
+
+					<div class="ui right attached segment" suiTabContent="6">
+						<p class="tac">Notification</p>
+						<div class="svg__overflow svg__display">
+							<!-- <span class="svg__width">
+								<svg-icon class="svg__icon" [src]="certificate" [stretch]="true"></svg-icon>
+							</span> -->
+							<mat-form-field appearance="fill">
+								<mat-label>Choose a date</mat-label>
+								<input matInput [matDatepicker]="picker">
+								<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+								<mat-datepicker #picker></mat-datepicker>
+							</mat-form-field>
+						</div>
+						<!-- .svg Close -->
+						<div class="mt-20 d-flex flex-jc-flex-end">
+							<button class="ui blue button">Next</button>
 						</div>
 					</div>
 				</div>
