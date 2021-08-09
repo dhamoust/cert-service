@@ -8,12 +8,38 @@
 				<div class="three wide column pt-0">
 					<div class="ui left attached vertical tabular menu">
 						<a class="item" suiTabHeader="1" [(isActive)]="templateActive">Select template</a>
-						<!-- <a class="item" suiTabHeader="2" [(isActive)]="createTab">Create template</a> -->
-						<a class="item" suiTabHeader="2" [(isActive)]="recipientTab">Recipient & Issuer details</a>
-						<a class="item" suiTabHeader="3" [(isActive)]="signatoryTab">Signatory details</a>
-						<a class="item" suiTabHeader="4" [(isActive)]="storageTab">Storage Info</a>
-						<a class="item" suiTabHeader="5" [(isActive)]="generateTab"
-							[isDisabled]="thirdDisabled">Preview/Generate</a>
+						<a
+							class="item"
+							suiTabHeader="2"
+							[(isActive)]="recipientTab"
+							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
+							[isDisabled]="certSelected.length === 0 ? true : false"
+							>Recipient & Issuer details</a
+						>
+						<a
+							class="item"
+							suiTabHeader="3"
+							[(isActive)]="signatoryTab"
+							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
+							[isDisabled]="certSelected.length === 0 ? true : false"
+							>Signatory details</a
+						>
+						<a
+							class="item"
+							suiTabHeader="4"
+							[(isActive)]="storageTab"
+							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
+							[isDisabled]="certSelected.length === 0 ? true : false"
+							>Storage Info</a
+						>
+						<a
+							class="item"
+							suiTabHeader="5"
+							[(isActive)]="generateTab"
+							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
+							[isDisabled]="certSelected.length === 0 ? true : false"
+							>Preview/Generate</a
+						>
 					</div>
 				</div>
 
@@ -21,21 +47,65 @@
 					<div class="ui right attached segment" suiTabContent="1">
 						<p class="tac">Select Template</p>
 						<div class="svg__overflow svg__display">
-							<span class="svg__width" (click)="selectedSvgCert($event)" [id]="certificate"
-								*ngFor="let certificate of showAllCertsValues">
-								<svg-icon class="svg__icon" [src]="certificate" [stretch]="true"></svg-icon>
+							<span
+								class="svg__width"
+								(click)="selectedSvgCert($event)"
+								[id]="certificate"
+								*ngFor="let certificate of showAllCertsValues"
+								[title]="
+									certificate.endsWith('niitMeritHtml.svg')
+										? 'NIIT MERIT ZIP'
+										: certificate.endsWith('niitParticipationHtml.svg')
+										? 'NIIT PARTICIPATION ZIP'
+										: certificate.endsWith('niitParticipation.svg')
+										? 'NIIT PARTICIPATION SVG'
+										: certificate.endsWith('meritCertificate.svg')
+										? 'NIIT MERIT SVG'
+										: ''
+								"
+							>
+								<svg-icon
+									class="svg__icon"
+									[src]="certificate"
+									[stretch]="true"
+									[svgStyle]="
+										certificate.endsWith('Html.svg')
+											? { 'width.px': 100, 'height.px': 100, 'margin.px': '3 -2 -4 -2' }
+											: { 'height.px': 200, 'margin.px': '-2 -2 -7 -2' }
+									"
+								>
+								</svg-icon>
+								<br />
+								<br />
+								{{
+									certificate.endsWith("niitMeritHtml.svg")
+										? "NIIT MERIT ZIP"
+										: certificate.endsWith("niitParticipationHtml.svg")
+										? "NIIT PARTICIPATION ZIP"
+										: certificate.endsWith("niitParticipation.svg")
+										? "NIIT PARTICIPATION SVG"
+										: certificate.endsWith("meritCertificate.svg")
+										? "NIIT MERIT SVG"
+										: ""
+								}}
 							</span>
 						</div>
 						<!-- .svg Close -->
 						<div class="mt-20 d-flex flex-jc-flex-end">
-							<button class="ui blue button" (click)="recipientTab = true">Next</button>
+							<button
+								class="ui blue button"
+								(click)="recipientTab = true"
+								[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
+								[disabled]="certSelected.length === 0 ? true : false"
+							>
+								Next
+							</button>
 						</div>
 					</div>
 
 					<div class="ui right attached segment" suiTabContent="2">
 						<p class="tac">Enter Recipient Details</p>
-						<app-default-template #formData [formFieldProperties]="formFieldProperties">
-						</app-default-template>
+						<app-default-template #formData [formFieldProperties]="formFieldProperties"> </app-default-template>
 						<div class="mt-20 d-flex flex-jc-flex-end">
 							<button class="ui blue button" (click)="signatoryTab = true">Next</button>
 						</div>
@@ -45,8 +115,7 @@
 						<p class="tac">Enter Signatory Details</p>
 						<div *ngIf="signatoryCount > 0">
 							<div *ngFor="let i of signatory">
-								<app-default-template #signatoryForm [formFieldProperties]="signatoryFieldProperties">
-								</app-default-template>
+								<app-default-template #signatoryForm [formFieldProperties]="signatoryFieldProperties"> </app-default-template>
 							</div>
 							<div id="icons">
 								<h4 class="mt-20"><i class="fas fa-minus-circle" (click)="removeSignatory()"></i></h4>
@@ -64,8 +133,7 @@
 							<sui-checkbox [(ngModel)]="storageInfo">yes</sui-checkbox>
 						</div>
 						<div *ngIf="storageInfo">
-							<app-default-template #storageForm [formFieldProperties]="storeFieldProperties">
-							</app-default-template>
+							<app-default-template #storageForm [formFieldProperties]="storeFieldProperties"> </app-default-template>
 						</div>
 						<div class="mt-20 d-flex flex-jc-flex-end">
 							<button class="ui blue button" (click)="generateTab = true">Next</button>
@@ -80,10 +148,9 @@
 							<button class="mr-20 sb-btn sb-btn-normal primary" (click)="createCertificate()">
 								{{ resourceService?.frmelmnts?.btn?.generate }}
 							</button>
-							<br>
-							<br>
+							<br />
+							<br />
 							<div>
-
 								<span>
 									<sui-checkbox>Notify to the user</sui-checkbox>
 								</span>
