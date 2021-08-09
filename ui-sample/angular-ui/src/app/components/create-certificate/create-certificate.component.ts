@@ -53,14 +53,8 @@ export class CreateCertificateComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.templateActive = true;
-    this.certificateService.getCertificateList().subscribe(res => {
-      this.showAllCertsKeys = Object.keys(res.result);
-      console.log(this.showAllCertsKeys);
-      this.showAllCertsValues = Object.values(res.result);
-      console.log(this.showAllCertsValues);
-    });
+    this.getTemplates();
     this.formService.getFormConfig("certificate").subscribe(res => {
       this.formFieldProperties = res.fields;
       console.log(this.formFieldProperties);
@@ -71,17 +65,21 @@ export class CreateCertificateComponent implements OnInit {
     this.formService.getFormConfig("store").subscribe(res => {
       this.storeFieldProperties = res.fields;
     });
-    this.getTemplates();
   }
 
-
   getTemplates() {
-
-    const template = {
-      id: "temp1",
-      name: "/assets/certificates/template-1.svg"
-    }
-    this.listOfTemplate.push(template);
+    this.certificateService.getCertificateList().subscribe(res => {
+      for (const key in res.result) {
+        if(key.endsWith(`niitMeritHtml`)) {
+          res.result[key] = `../../assets/certificates/niitMeritHtml.svg`;
+        }
+        if(key.endsWith(`niitMeritCertificateHtml`)) {
+          res.result[key] = `../../assets/certificates/niitParticipationHtml.svg`;
+        }
+      }
+      this.showAllCertsKeys = Object.keys(res.result);
+      this.showAllCertsValues = Object.values(res.result);
+    });
   }
   createCertificate() {
     const certificateData = this.generateData(_.pickBy(this.formData.formInputData));
@@ -92,7 +90,10 @@ export class CreateCertificateComponent implements OnInit {
           certificate: certificateData
         }
       },
-      url: urlConfig.URLS.GENERTATE_CERT
+      url:
+        this.showAllCertsKeys[this.certificateSelected].endsWith('Html')
+          ? urlConfig.URLS.GENERTATE_CERT_HTML
+          : urlConfig.URLS.GENERTATE_CERT_SVG
     };
     this.dataService.post(requestData).subscribe(res => {
       console.log("RESPONSE", res)
@@ -207,7 +208,7 @@ export class CreateCertificateComponent implements OnInit {
     }
     this.dataService.post(requestData).subscribe(res => {
       window.open(res.result.signedUrl, '_blank');
-      this.router.navigate(['']);
+      // this.router.navigate(['']);
     });
   }
   removeSignatory() {
