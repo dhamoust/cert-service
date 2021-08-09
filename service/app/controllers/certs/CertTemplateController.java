@@ -189,7 +189,7 @@ public class CertTemplateController extends BaseController {
             Http.RequestBody req= httpRequest.body();
             JsonNode json = req.asJson();
             String pdfUrl=  json.get("pdfUrl").textValue();
-            String recipientId=  json.get("recipientId").textValue();
+            String recipientId=  json.get("recipientEmail").textValue();
             String recipientName=  json.get("recipientName").textValue();
             String courseName=  json.get("courseName").textValue();
 
