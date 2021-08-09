@@ -102,7 +102,7 @@ export class CreateCertificateComponent implements OnInit {
         ? this.pdfUrl = res.result.response[0].jsonData.printUri
         : this.pdfUrl = res.result.response[0].pdfUrl
       // if (this.pdfUrl.startsWith("data")) {
-      //   window.open(this.pdfUrl);
+        window.open(this.pdfUrl);
       // } else if (this.pdfUrl.startsWith("http")) {
       //   window.open(this.pdfUrl);
       // } else {
@@ -212,7 +212,7 @@ export class CreateCertificateComponent implements OnInit {
       url: urlConfig.URLS.DOWLOAD_PDF
     }
     this.dataService.post(requestData).subscribe(res => {
-      window.open(res.result.signedUrl);
+      // window.open(res.result.signedUrl);
       // this.router.navigate(['']);
     });
   }
