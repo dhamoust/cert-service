@@ -97,14 +97,17 @@ export class CreateCertificateComponent implements OnInit {
     };
     this.dataService.post(requestData).subscribe(res => {
       console.log("RESPONSE", res)
-      console.log('certificate generated successfully', res)
-
-      this.pdfUrl = res.result.response[0].pdfUrl;
-      if (this.pdfUrl.startsWith("http")) {
-        window.open(this.pdfUrl, '_blank');
-      } else {
-        this.dowloadPdf();
-      }
+      console.log('certificate generated successfully', res);
+      this.showAllCertsKeys[this.certificateSelected].endsWith('Svg')
+        ? this.pdfUrl = res.result.response[0].jsonData.printUri
+        : this.pdfUrl = res.result.response[0].pdfUrl
+      // if (this.pdfUrl.startsWith("data")) {
+      //   window.open(this.pdfUrl);
+      // } else if (this.pdfUrl.startsWith("http")) {
+      //   window.open(this.pdfUrl);
+      // } else {
+      this.dowloadPdf();
+      // }
       const emailnotifier = {
         pdfUrl: this.pdfUrl,
         courseName: certificateData.courseName,
@@ -136,7 +139,8 @@ export class CreateCertificateComponent implements OnInit {
       description: '',
       certificateNum: '',
       studentRegNo: '',
-
+      htmlTemplate: '',
+      svgTemplate: ''
     };
     const data = [{
       recipientName: requestData.recipientName,
@@ -156,7 +160,8 @@ export class CreateCertificateComponent implements OnInit {
     certificate.data = data;
     certificate.issuer = issuer;
     certificate.signatoryList = signatoryList;
-    // certificate.htmlTemplate = this.htmlTemplate;
+    certificate.htmlTemplate = this.showAllCertsKeys[this.certificateSelected];
+    certificate.svgTemplate = this.showAllCertsKeys[this.certificateSelected];
     certificate.htmlTemplateId = this.showAllCertsKeys[this.certificateSelected];
     certificate.svgTemplateId = this.showAllCertsKeys[this.certificateSelected];
     certificate.courseName = requestData.courseName;
@@ -207,7 +212,7 @@ export class CreateCertificateComponent implements OnInit {
       url: urlConfig.URLS.DOWLOAD_PDF
     }
     this.dataService.post(requestData).subscribe(res => {
-      window.open(res.result.signedUrl, '_blank');
+      window.open(res.result.signedUrl);
       // this.router.navigate(['']);
     });
   }

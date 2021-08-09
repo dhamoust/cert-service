@@ -31,11 +31,10 @@ export class CertificateService {
   }
 
   sendNotificationToUser(emailCertificate: IEmailCertificate): Observable<any> {
-
     console.log("emailCertificateObject", emailCertificate);
     const headers = { 'content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     const requestBody = emailCertificate;
     console.log("requestBody", requestBody)
-    return this.http.post(`http://f249983c6352.ngrok.io/user/email`, requestBody, { 'headers': headers })
+    return this.http.post(`http://localhost:9000/user/email`, requestBody, { 'headers': headers })
   }
 }
