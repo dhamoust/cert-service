@@ -16,7 +16,7 @@ public class Endorsement extends OBBase {
     private String claim;
 
     /**
-     * The profile of the Endorsement’s issuer.
+     * The profile of the Endorsements issuer.
      */
     private Profile issuer;
 
