@@ -1,16 +1,16 @@
 {
-    "URLS": {
-        "BASE_URL": "http://58ef38df1cba.ngrok.io",
-        "SEARCH": "/search",
-        "READ": "/read",
-        "ADD": "/add",
-        "UPDATE": "/update",
-        "GENERTATE_CERT_HTML": "/v1/certs/generate",
-        "GENERTATE_CERT_SVG": "/v2/certs/generate",
-        "DOWLOAD_PDF": "/v1/user/certs/download",
-        "SHOW_CERT": "/templates/svg",
-        "EMAIL_NOTIFICATION": "/user/email",
-        "SEARCH_CERT": "/certs/v1/registry/search"
-    },
-    "PAGE_LIMIT": 20
+	"URLS": {
+		"BASE_URL": "http://localhost:9000",
+		"SEARCH": "/search",
+		"READ": "/read",
+		"ADD": "/add",
+		"UPDATE": "/update",
+		"GENERTATE_CERT_HTML": "/v1/certs/generate",
+		"GENERTATE_CERT_SVG": "/v2/certs/generate",
+		"DOWLOAD_PDF": "/v1/user/certs/download",
+		"SHOW_CERT": "/templates/svg",
+		"EMAIL_NOTIFICATION": "/user/email",
+		"SEARCH_CERT": "https://58ef38df1cba.ngrok.io/certs/v1/registry/search"
+	},
+	"PAGE_LIMIT": 20
 }

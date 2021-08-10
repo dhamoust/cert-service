@@ -10,21 +10,40 @@
 						<a class="item" suiTabHeader="1" [(isActive)]="templateActive">Select template</a>
 						<!-- <a class="item" suiTabHeader="2" [(isActive)]="createTab">Create template</a> -->
 
-						<a class="item" suiTabHeader="2" [(isActive)]="recipientTab"
+						<a
+							class="item"
+							suiTabHeader="2"
+							[(isActive)]="recipientTab"
 							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
-							[isDisabled]="certSelected.length === 0 ? true : false">Recipient & Issuer details</a>
-						<a class="item" suiTabHeader="3" [(isActive)]="signatoryTab"
+							[isDisabled]="certSelected.length === 0 ? true : false"
+							>Recipient & Issuer details</a
+						>
+						<a
+							class="item"
+							suiTabHeader="3"
+							[(isActive)]="signatoryTab"
 							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
-							[isDisabled]="certSelected.length === 0 ? true : false">Signatory details</a>
-						<a class="item" suiTabHeader="4" [(isActive)]="storageTab"
+							[isDisabled]="certSelected.length === 0 ? true : false"
+							>Signatory details</a
+						>
+						<a
+							class="item"
+							suiTabHeader="4"
+							[(isActive)]="storageTab"
 							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
-							[isDisabled]="certSelected.length === 0 ? true : false">Storage Info</a>
-						<a class="item" suiTabHeader="5" [(isActive)]="generateTab"
+							[isDisabled]="certSelected.length === 0 ? true : false"
+							>Storage Info</a
+						>
+						<a
+							class="item"
+							suiTabHeader="5"
+							[(isActive)]="generateTab"
 							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
-							[isDisabled]="certSelected.length === 0 ? true : false">Preview/Generate</a>
+							[isDisabled]="certSelected.length === 0 ? true : false"
+							>Preview/Generate</a
+						>
 
 						<a class="item" suiTabHeader="6" [(isActive)]="notifyTab">Notification</a>
-
 					</div>
 				</div>
 
@@ -32,8 +51,12 @@
 					<div class="ui right attached segment" suiTabContent="1">
 						<p class="tac">Select Template</p>
 						<div class="svg__overflow svg__display">
-							<span class="svg__width" (click)="selectedSvgCert($event)" [id]="certificate"
-								*ngFor="let certificate of showAllCertsValues" [title]="
+							<span
+								class="svg__width"
+								(click)="selectedSvgCert($event)"
+								[id]="certificate"
+								*ngFor="let certificate of showAllCertsValues"
+								[title]="
 									certificate.endsWith('niitMeritHtml.svg')
 										? 'NIIT MERIT ZIP'
 										: certificate.endsWith('niitParticipationHtml.svg')
@@ -43,33 +66,42 @@
 										: certificate.endsWith('meritCertificate.svg')
 										? 'NIIT MERIT SVG'
 										: ''
-								">
-								<svg-icon class="svg__icon" [src]="certificate" [stretch]="true" [svgStyle]="
+								"
+							>
+								<svg-icon
+									class="svg__icon"
+									[src]="certificate"
+									[stretch]="true"
+									[svgStyle]="
 										certificate.endsWith('Html.svg')
 											? { 'width.px': 100, 'height.px': 100, 'margin.px': '3 -2 -4 -2' }
 											: { 'height.px': 200, 'margin.px': '-2 -2 -7 -2' }
-									">
+									"
+								>
 								</svg-icon>
 								<br />
 								<br />
 								{{
-								certificate.endsWith("niitMeritHtml.svg")
-								? "NIIT MERIT ZIP"
-								: certificate.endsWith("niitParticipationHtml.svg")
-								? "NIIT PARTICIPATION ZIP"
-								: certificate.endsWith("niitParticipation.svg")
-								? "NIIT PARTICIPATION SVG"
-								: certificate.endsWith("meritCertificate.svg")
-								? "NIIT MERIT SVG"
-								: ""
+									certificate.endsWith("niitMeritHtml.svg")
+										? "NIIT MERIT ZIP"
+										: certificate.endsWith("niitParticipationHtml.svg")
+										? "NIIT PARTICIPATION ZIP"
+										: certificate.endsWith("niitParticipation.svg")
+										? "NIIT PARTICIPATION SVG"
+										: certificate.endsWith("meritCertificate.svg")
+										? "NIIT MERIT SVG"
+										: ""
 								}}
 							</span>
 						</div>
 						<!-- .svg Close -->
 						<div class="mt-20 d-flex flex-jc-flex-end">
-							<button class="ui blue button" (click)="recipientTab = true"
+							<button
+								class="ui blue button"
+								(click)="recipientTab = true"
 								[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
-								[disabled]="certSelected.length === 0 ? true : false">
+								[disabled]="certSelected.length === 0 ? true : false"
+							>
 								Next
 							</button>
 						</div>
@@ -77,8 +109,7 @@
 
 					<div class="ui right attached segment" suiTabContent="2">
 						<p class="tac">Enter Recipient Details</p>
-						<app-default-template #formData [formFieldProperties]="formFieldProperties">
-						</app-default-template>
+						<app-default-template #formData [formFieldProperties]="formFieldProperties"> </app-default-template>
 						<div class="mt-20 d-flex flex-jc-flex-end">
 							<button class="ui blue button" (click)="signatoryTab = true">Next</button>
 						</div>
@@ -88,8 +119,7 @@
 						<p class="tac">Enter Signatory Details</p>
 						<div *ngIf="signatoryCount > 0">
 							<div *ngFor="let i of signatory">
-								<app-default-template #signatoryForm [formFieldProperties]="signatoryFieldProperties">
-								</app-default-template>
+								<app-default-template #signatoryForm [formFieldProperties]="signatoryFieldProperties"> </app-default-template>
 							</div>
 							<div id="icons">
 								<h4 class="mt-20"><i class="fas fa-minus-circle" (click)="removeSignatory()"></i></h4>
@@ -107,8 +137,7 @@
 							<sui-checkbox [(ngModel)]="storageInfo">yes</sui-checkbox>
 						</div>
 						<div *ngIf="storageInfo">
-							<app-default-template #storageForm [formFieldProperties]="storeFieldProperties">
-							</app-default-template>
+							<app-default-template #storageForm [formFieldProperties]="storeFieldProperties"> </app-default-template>
 						</div>
 						<div class="mt-20 d-flex flex-jc-flex-end">
 							<button class="ui blue button" (click)="generateTab = true">Next</button>
@@ -133,10 +162,8 @@
 						</div>
 					</div>
 
-
 					<div class="ui right attached segment" suiTabContent="6">
 						<p class="tac">Notification</p>
-
 
 						<!-- <span class="svg__width">
 								<svg-icon class="svg__icon" [src]="certificate" [stretch]="true"></svg-icon>
@@ -146,20 +173,19 @@
 						<div class="alligDatepicker">
 							<div>
 								<mat-label>From date</mat-label>
-								<input id="startDate" matInput [matDatepicker]="Frompicker">
+								<input id="startDate" matInput [matDatepicker]="Frompicker" />
 								<mat-datepicker-toggle matSuffix [for]="Frompicker"></mat-datepicker-toggle>
 								<mat-datepicker #Frompicker></mat-datepicker>
 							</div>
-							<br>
+							<br />
 							<div>
-
 								<mat-label>To date </mat-label>
-								<input id="endDate" matInput [matDatepicker]="Topicker">
+								<input id="endDate" matInput [matDatepicker]="Topicker" />
 								<mat-datepicker-toggle matSuffix [for]="Topicker"></mat-datepicker-toggle>
 								<mat-datepicker #Topicker></mat-datepicker>
 							</div>
 							<!-- <div class="example-header">
-								
+
 
 								<input matInput (keyup)="applyFilter($event.target.value)"
 									placeholder="Search by name or email" />
@@ -185,7 +211,6 @@
 								<td>1</td>
 								<td>C1</td>
 								<td>Rishabh</td>
-
 							</tr>
 							<tr>
 								<td><input type="checkbox" /></td>
@@ -193,7 +218,6 @@
 								<td>2</td>
 								<td>C2</td>
 								<td>Tanya</td>
-
 							</tr>
 							<tr>
 								<td><input type="checkbox" /></td>
@@ -201,7 +225,6 @@
 								<td>3</td>
 								<td>C3</td>
 								<td>Raju</td>
-
 							</tr>
 							<tr>
 								<td><input type="checkbox" /></td>
@@ -209,15 +232,10 @@
 								<td>4</td>
 								<td>C4</td>
 								<td>Vijay</td>
-
 							</tr>
 						</table>
 						<br />
 						<!-- <input id="btnGet" type="button" value="Send Notification" /> -->
-
-
-
-
 						<!-- .svg Close -->
 						<div class="mt-20 d-flex flex-jc-flex-end">
 							<button class="ui blue button">Send Notification</button>

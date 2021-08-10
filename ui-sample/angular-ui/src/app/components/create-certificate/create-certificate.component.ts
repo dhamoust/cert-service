@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, QueryList, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, OnChanges, ElementRef } from '@angular/core';
 import { DataService } from '../../services/data/data.service';
 import { ResourceService } from '../../services/resource/resource.service';
 import { FormService } from '../../services/forms/form.service';
@@ -12,14 +12,12 @@ import { IEmailCertificate } from 'src/app/services/email-certificate.model';
 import * as $ from 'jquery';
 import moment from 'moment';
 
-
 @Component({
   selector: 'app-create-certificate',
   templateUrl: './create-certificate.component.html',
   styleUrls: ['./create-certificate.component.scss']
 })
 export class CreateCertificateComponent implements OnInit {
-
   @ViewChild('formData') formData: DefaultTemplateComponent;
   @ViewChildren('signatoryForm') signatoryFormData: QueryList<DefaultTemplateComponent>;
   @ViewChild('storageForm') storageFormData: DefaultTemplateComponent;
@@ -29,6 +27,7 @@ export class CreateCertificateComponent implements OnInit {
   resourceService: ResourceService;
   pdfUrl: string;
   public formFieldProperties: any;
+  public selectedTemplate: any;
   public storeFieldProperties: any;
   public signatoryFieldProperties: any;
   public req: CertReq;
@@ -70,6 +69,7 @@ export class CreateCertificateComponent implements OnInit {
       this.storeFieldProperties = res.fields;
     });
   }
+
 
   getTemplates() {
     this.certificateService.getCertificateList().subscribe(res => {
@@ -245,29 +245,15 @@ export class CreateCertificateComponent implements OnInit {
 
 
   applyFilter() {
-    // this.certificateService.searchCertificate(event).subscribe(data => {
-    //   console.log("Search data", data);
-    // })
     var fromDate = moment($("#startDate").val()).format("YYYY-MM-DD");
     var toDate = moment($("#endDate").val()).format("YYYY-MM-DD");
-    // let newArray = [];
-    // newArray.push({
-    //   "range": {
-    //     "data.issuedOn": {
-    //       "gte": fromDate,
-    //       "lte": toDate
-    //     }
-    //   }
-    // })
     var queryData = {
-
       "request": {
         "query": {
           "bool": {
             "must": []
           }
         }
-
       }
     }
     queryData.request.query.bool.must.push({
@@ -311,5 +297,7 @@ export class CreateCertificateComponent implements OnInit {
     }
     console.log(this.certSelected);
     console.log(this.showAllCertsKeys[this.certificateSelected]);
+    this.selectedTemplate = this.showAllCertsKeys[this.certificateSelected].includes('niitMerit');
+    console.log(this.selectedTemplate);
   }
 }
