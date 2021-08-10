@@ -1,7 +1,10 @@
 package org.sunbird;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.*;
+import org.apache.http.HeaderElement;
+import org.apache.http.HeaderElementIterator;
+import org.apache.http.HttpEntity;
+import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
@@ -12,21 +15,24 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.LongSerializer;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.sunbird.incredible.pojos.CertificateExtension;
 import org.sunbird.incredible.processor.JsonKey;
 import org.sunbird.incredible.processor.views.HTMLVarResolver;
 import org.sunbird.incredible.processor.views.HTMLVars;
-import org.sunbird.incredible.pojos.CertificateExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.sunbird.response.CertificateResponse;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.apache.commons.lang.StringUtils.capitalize;
@@ -65,6 +71,8 @@ public class PdfGenerator {
 //    private static final String PRINT_SERVICE_URL = "http://print-service:5000/v1/print/pdf";
 
     private static final String PRINT_SERVICE_URL = "http://localhost:5000/v1/print/pdf";
+
+    private static final String CERT_REGISTRY_SERVICE_URL = "http://localhost:9010/certs/v1/registry/add";
 
     public static String generate(String htmlTemplateUrl, CertificateExtension certificateExtension , String qrImageUrl,
                                   String container, String path) throws IOException {
@@ -132,6 +140,40 @@ public class PdfGenerator {
       Map<String,Object> printResponse = (Map<String,Object>)resMap.get(JsonKey.RESULT);
       String pdfUrl = (String)(printResponse.get(JsonKey.PDF_URL));
       return pdfUrl;
+    }
+
+    public static void syncCertRegistry(CertificateResponse certificateRequest) throws IOException {
+        HttpPost httpPost = new HttpPost(CERT_REGISTRY_SERVICE_URL);
+        Map<String, Object> req = new HashMap<>();
+        req.put("request",certificateRequest);
+        String json = mapper.writeValueAsString(req);
+        json = new String(json.getBytes(), StandardCharsets.UTF_8);
+        StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
+        httpPost.setEntity(entity);
+
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        logger.info("Cert Registry Request : "+ httpPost);
+        CloseableHttpResponse response = client.execute(httpPost);
+        if (response.getStatusLine().getStatusCode() == 200) {
+            try {
+                response.close();
+            } catch (Exception ex) {
+                logger.error("Exception occurred while closing http response.");
+            }
+            logger.info("Data has been synched");
+        }
+    }
+
+    public static Producer<Long, Object> createProducer() {
+        Properties props = new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ProducerConfig.CLIENT_ID_CONFIG, "client1");
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class.getName());
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+//        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, CustomPartitioner.class.getName());
+        return new KafkaProducer<>(props);
     }
 
 }
