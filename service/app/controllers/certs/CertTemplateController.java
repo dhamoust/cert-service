@@ -185,13 +185,18 @@ public class CertTemplateController extends BaseController {
         /*    Map<String, Object> template = getTemplate(getRequest(request()));
             validateTemplate(template, true);
             String identifier = (String) template.get("identifier");*/
-
+            List<String> pdfUrl = new ArrayList<String>();
+            List<String> recipientId = new ArrayList<String>();
+            List<String> recipientName = new ArrayList<String>();
+            List<String> courseName = new ArrayList<String>();
             Http.RequestBody req= httpRequest.body();
             JsonNode json = req.asJson();
-            String pdfUrl=  json.get("pdfUrl").textValue();
-            String recipientId=  json.get("recipientEmail").textValue();
-            String recipientName=  json.get("recipientName").textValue();
-            String courseName=  json.get("courseName").textValue();
+            for(JsonNode jsonValue:json) {
+                pdfUrl.add(jsonValue.get("pdfUrl").textValue());
+                recipientId.add(jsonValue.get("recipientEmail").textValue());
+                recipientName.add(jsonValue.get("recipientName").textValue());
+                courseName.add(jsonValue.get("courseName").textValue());
+            }
 
             CompletableFuture<Map<String, Object>> future ;
 

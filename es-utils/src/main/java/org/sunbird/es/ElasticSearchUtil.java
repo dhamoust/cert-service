@@ -438,26 +438,31 @@ public class ElasticSearchUtil {
 	}
 
 
-	public static CompletableFuture sendGridEmail(String pdfUrl, String recipientId, String recipientName, String courseName) throws Exception {
+	public static CompletableFuture sendGridEmail(List<String> pdfUrl, List<String> recipientId, List<String> recipientName, List<String> courseName) throws Exception {
 		CompletableFuture future = new CompletableFuture();
-
+		Request request = new Request();
+		Mail mail = null;
+		SendGrid sg = null;
+		com.sendgrid.Response response = null;
 		Email from = new Email("");
 		from.setName("StackRoute Certification Service");
-		Email to = new Email(recipientId);
-		String subject = "Download your certificate here";
-		String body = "Dear " + recipientName + ",<br/></br>" + "\n" + "<p>Congratulations, you have successfully completed a course titled : " + "\n" + courseName + "\n" + ".</p> </br></br>" + "<p> You can download your certificate by following below link.</p>" + "\n" + "</br></br>" + pdfUrl + "\n" + "<p></br></br>" + "Sincere Regards,</p>" + "<p></br>" + "NIIT Ltd</p>";
-		Content content = new Content("text/html", body);
+		for(String recipients: recipientId) {
+			Email to = new Email(recipients);
+			String subject = "Download your certificate here";
+			int index = recipientId.indexOf(recipients);
+			String body = "Dear " + recipientName.get(index) + ",<br/></br>" + "\n" + "<p>Congratulations, you have successfully completed a course titled : " + "\n" + courseName + "\n" + ".</p> </br></br>" + "<p> You can download your certificate by following below link.</p>" + "\n" + "</br></br>" + pdfUrl + "\n" + "<p></br></br>" + "Sincere Regards,</p>" + "<p></br>" + "NIIT Ltd</p>";
+			Content content = new Content("text/html", body);
+			sg = new SendGrid("");
+			mail = new Mail(from, subject, to, content);
+			request.setMethod(Method.POST);
+			request.setEndpoint("mail/send");
+			request.setBody(mail.build());
+			response = sg.api(request);
 
-		Mail mail = new Mail(from, subject, to, content);
+		}
 
-		SendGrid sg = new SendGrid("");
-		Request request = new Request();
 
-		request.setMethod(Method.POST);
-		request.setEndpoint("mail/send");
-		request.setBody(mail.build());
 
-		com.sendgrid.Response response = sg.api(request);
 
 		System.out.println(response.getStatusCode());
 		System.out.println(response.getHeaders());

@@ -30,7 +30,7 @@ public class Assertion extends OBBase {
     private BadgeClass badge;
 
     /**
-     * IRI or document representing an image representing this user’s achievement.
+     * IRI or document representing an image representing this users achievement.
      * This must be a PNG or SVG image. Otherwise, use BadgeClass member.
      */
     private String image;
