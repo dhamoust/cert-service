@@ -1,6 +1,6 @@
 {
     "URLS": {
-        "BASE_URL": "http://f249983c6352.ngrok.io",
+        "BASE_URL": "http://localhost:9000",
         "SEARCH": "/search",
         "READ": "/read",
         "ADD": "/add",

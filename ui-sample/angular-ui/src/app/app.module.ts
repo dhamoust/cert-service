@@ -20,6 +20,11 @@ import { FormsModule, ReactiveFormsModule, } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { CreateCertificateComponent } from './components/create-certificate/create-certificate.component';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material';
+import { MatNativeDateModule } from '@angular/material';
+// import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 @NgModule({
   declarations: [
@@ -42,7 +47,12 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    AngularSvgIconModule
+    AngularSvgIconModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -95,20 +95,80 @@
 
 					<div class="ui right attached segment" suiTabContent="6">
 						<p class="tac">Notification</p>
-						<div class="svg__overflow svg__display">
-							<!-- <span class="svg__width">
+
+						<!-- <span class="svg__width">
 								<svg-icon class="svg__icon" [src]="certificate" [stretch]="true"></svg-icon>
 							</span> -->
-							<mat-form-field appearance="fill">
-								<mat-label>Choose a date</mat-label>
-								<input matInput [matDatepicker]="picker">
-								<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-								<mat-datepicker #picker></mat-datepicker>
-							</mat-form-field>
+
+						<!-- <mat-form-field appearance="fill"> -->
+						<div class="alligDatepicker">
+							<div>
+								<mat-label>From date</mat-label>
+								<input matInput [matDatepicker]="Frompicker">
+								<mat-datepicker-toggle matSuffix [for]="Frompicker"></mat-datepicker-toggle>
+								<mat-datepicker #Frompicker></mat-datepicker>
+							</div>
+							<br>
+							<div>
+
+								<mat-label>To date </mat-label>
+								<input matInput [matDatepicker]="Topicker">
+								<mat-datepicker-toggle matSuffix [for]="Topicker"></mat-datepicker-toggle>
+								<mat-datepicker #Topicker></mat-datepicker>
+							</div>
 						</div>
+						<!-- </mat-form-field> -->
+
+						<table>
+							<tr>
+								<th>Select</th>
+								<th>Date</th>
+								<th>Registration No.</th>
+								<th>Certificate No.</th>
+								<th>Issuer Name</th>
+							</tr>
+							<tr>
+								<td><input type="checkbox" /></td>
+								<td>1/8/2021</td>
+								<td>1</td>
+								<td>C1</td>
+								<td>Rishabh</td>
+
+							</tr>
+							<tr>
+								<td><input type="checkbox" /></td>
+								<td>10/8/2021</td>
+								<td>2</td>
+								<td>C2</td>
+								<td>Tanya</td>
+
+							</tr>
+							<tr>
+								<td><input type="checkbox" /></td>
+								<td>9/8/2021</td>
+								<td>3</td>
+								<td>C3</td>
+								<td>Raju</td>
+
+							</tr>
+							<tr>
+								<td><input type="checkbox" /></td>
+								<td>6/8/2021</td>
+								<td>4</td>
+								<td>C4</td>
+								<td>Vijay</td>
+
+							</tr>
+						</table>
+						<br />
+						<!-- <input id="btnGet" type="button" value="Send Notification" /> -->
+
+
+
+
 						<!-- .svg Close -->
 						<div class="mt-20 d-flex flex-jc-flex-end">
-							<button class="ui blue button">Next</button>
+							<button class="ui blue button">Send Notification</button>
 						</div>
 					</div>
 				</div>
