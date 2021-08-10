@@ -27,12 +27,20 @@ h4 {
 	height: 250px;
 	display: flex;
 	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .svg__width {
+	text-align: center;
 	cursor: pointer;
 	width: 31%;
-	margin: 5px;
+	color: #024f9d;
+	font-weight: bold;
+	font-size: 9px;
+	margin-bottom: 10px;
+	word-spacing: 1px;
+	letter-spacing: 0.5px;
 }
 
 .svg__icon {

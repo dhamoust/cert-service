@@ -3,36 +3,29 @@ package org.sunbird.cert.actor;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.FileReader;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.sunbird.*;
+import org.sunbird.cert.actor.operation.CertActorOperation;
+import org.sunbird.cloud.storage.BaseStorageService;
+import org.sunbird.cloud.storage.factory.StorageConfig;
+import org.sunbird.cloud.storage.factory.StorageServiceFactory;
 import org.sunbird.incredible.CertificateGenerator;
 import org.sunbird.incredible.UrlManager;
+import org.sunbird.incredible.pojos.CertificateExtension;
 import org.sunbird.incredible.processor.CertModel;
 import org.sunbird.incredible.processor.JsonKey;
 import org.sunbird.incredible.processor.store.CertStoreFactory;
 import org.sunbird.incredible.processor.store.ICertStore;
 import org.sunbird.incredible.processor.store.StoreConfig;
-import org.sunbird.incredible.pojos.CertificateExtension;
-import org.sunbird.BaseActor;
-import org.sunbird.BaseException;
-import org.sunbird.CertMapper;
-import org.sunbird.CertsConstant;
-import org.sunbird.PdfGenerator;
-import org.sunbird.QRStorageParams;
 import org.sunbird.incredible.processor.views.SvgGenerator;
-import org.sunbird.cert.actor.operation.CertActorOperation;
-import org.sunbird.cloud.storage.BaseStorageService;
-import org.sunbird.cloud.storage.factory.StorageConfig;
-import org.sunbird.cloud.storage.factory.StorageServiceFactory;
 import org.sunbird.message.IResponseMessage;
 import org.sunbird.message.ResponseCode;
 import org.sunbird.request.Request;
@@ -42,15 +35,9 @@ import org.sunbird.response.Response;
 import scala.Some;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This actor is responsible for certificate generation.
@@ -175,6 +162,12 @@ public class CertificateGeneratorActor extends BaseActor {
                 certificateResponse = new CertificateResponseV1(uuid, accessCode, certModel.getIdentifier(), convertStringToMap(jsonData), properties.get(JsonKey.BASE_PATH).concat(pdfLink));
                 Map<String, Object> uploadRes = uploadJson(directory + uuid, certStore, certStoreFactory.setCloudPath(storeParams));
                 certificateResponse.setJsonUrl(properties.get(JsonKey.BASE_PATH).concat((String) uploadRes.get(JsonKey.JSON_URL)));
+
+                Producer<Long, Object> producer = PdfGenerator.createProducer();
+                ProducerRecord prodRecord = new ProducerRecord("certi_test_topic", certificateResponse.toString());
+                producer.send(prodRecord);
+                producer.close();
+//                PdfGenerator.syncCertRegistry(certificateResponse);
                 certUrlList.add(mapper.convertValue(certificateResponse, new TypeReference<Map<String, Object>>() {
                 }));
             } catch (Exception ex) {

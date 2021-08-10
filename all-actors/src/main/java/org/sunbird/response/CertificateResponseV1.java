@@ -18,4 +18,17 @@ public class CertificateResponseV1 extends CertificateResponse {
     public void setPdfUrl(String pdfUrl) {
         this.pdfUrl = pdfUrl;
     }
+
+    @Override
+    public String toString() {
+        return "CertificateResponseV1{" +
+                "id='" + getId() + '\'' +
+                ", accessCode='" + getAccessCode() + '\'' +
+                ", jsonData=" + getJsonData() +
+                ", recipientId='" + getRecipientId() + '\'' +
+                ", jsonUrl='" + getJsonUrl() + '\'' +
+                ", svgUrl='" + getSvgUrl() + '\'' +
+                ", pdfUrl='" + pdfUrl + '\'' +
+                '}';
+    }
 }

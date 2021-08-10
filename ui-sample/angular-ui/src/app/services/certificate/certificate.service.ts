@@ -8,12 +8,19 @@ import { IEmailCertificate } from '../email-certificate.model';
 @Injectable({
   providedIn: 'root'
 })
-export class CertificateService {
 
-  constructor(private http: HttpClient) { }
+export class CertificateService {
+  http: HttpClient;
+  baseUrl: string;
+
+  constructor(http: HttpClient) {
+    this.http = http;
+    this.baseUrl = urlConfig.URLS.BASE_URL;
+  }
 
   public getCertificateList(): Observable<any> {
-    return this.http.get(`${urlConfig.URLS.BASE_URL}${urlConfig.URLS.SHOW_CERT}`).pipe(
+    const headers = { 'content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    return this.http.get(`${this.baseUrl}${urlConfig.URLS.SHOW_CERT}`, { headers }).pipe(
       map((response: any) => {
         return response;
       }),
@@ -23,11 +30,7 @@ export class CertificateService {
     );
   }
 
-
-
-
   sendNotificationToUser(emailCertificate: IEmailCertificate): Observable<any> {
-
     console.log("emailCertificateObject", emailCertificate);
     const headers = { 'content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     const requestBody = emailCertificate;
@@ -36,12 +39,4 @@ export class CertificateService {
 
 
   }
-
-
-
-
-
-
 }
-
-
