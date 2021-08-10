@@ -1,6 +1,6 @@
 {
     "URLS": {
-        "BASE_URL": "https://e3d19cbf0872.ngrok.io",
+        "BASE_URL": "http://58ef38df1cba.ngrok.io",
         "SEARCH": "/search",
         "READ": "/read",
         "ADD": "/add",
@@ -9,7 +9,8 @@
         "GENERTATE_CERT_SVG": "/v2/certs/generate",
         "DOWLOAD_PDF": "/v1/user/certs/download",
         "SHOW_CERT": "/templates/svg",
-        "EMAIL_NOTIFICATION": "/user/email"
+        "EMAIL_NOTIFICATION": "/user/email",
+        "SEARCH_CERT": "/certs/v1/registry/search"
     },
     "PAGE_LIMIT": 20
 }

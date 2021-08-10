@@ -24,8 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material';
 import { MatNativeDateModule } from '@angular/material';
-// import { MatMomentDateModule } from '@angular/material-moment-adapter';
-
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,6 +51,7 @@ import { MatNativeDateModule } from '@angular/material';
     MatFormFieldModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatIconModule
 
   ],
   providers: [],

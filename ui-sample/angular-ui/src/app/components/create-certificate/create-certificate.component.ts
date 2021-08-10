@@ -9,6 +9,9 @@ import urlConfig from '../../services/urlConfig.json';
 import { CertReq, Store, Templates } from '../../services/interfaces/certificate';
 import { Router } from '@angular/router';
 import { IEmailCertificate } from 'src/app/services/email-certificate.model';
+import * as $ from 'jquery';
+import moment from 'moment';
+
 
 @Component({
   selector: 'app-create-certificate',
@@ -44,6 +47,7 @@ export class CreateCertificateComponent implements OnInit {
   certSelected = [];
   certificateSelected;
   emailCertificateObject: IEmailCertificate;
+
   constructor(dataService: DataService, formService: FormService, certificateService: CertificateService, resourceService: ResourceService, router: Router) {
     this.dataService = dataService;
     this.resourceService = resourceService;
@@ -70,10 +74,10 @@ export class CreateCertificateComponent implements OnInit {
   getTemplates() {
     this.certificateService.getCertificateList().subscribe(res => {
       for (const key in res.result) {
-        if(key.endsWith(`niitMeritHtml`)) {
+        if (key.endsWith(`niitMeritHtml`)) {
           res.result[key] = `../../assets/certificates/niitMeritHtml.svg`;
         }
-        if(key.endsWith(`niitMeritCertificateHtml`)) {
+        if (key.endsWith(`niitMeritCertificateHtml`)) {
           res.result[key] = `../../assets/certificates/niitParticipationHtml.svg`;
         }
       }
@@ -102,7 +106,7 @@ export class CreateCertificateComponent implements OnInit {
         ? this.pdfUrl = res.result.response[0].jsonData.printUri
         : this.pdfUrl = res.result.response[0].pdfUrl
       // if (this.pdfUrl.startsWith("data")) {
-        window.open(this.pdfUrl);
+      window.open(this.pdfUrl);
       // } else if (this.pdfUrl.startsWith("http")) {
       //   window.open(this.pdfUrl);
       // } else {
@@ -239,6 +243,48 @@ export class CreateCertificateComponent implements OnInit {
     })
   }
 
+
+  applyFilter() {
+    // this.certificateService.searchCertificate(event).subscribe(data => {
+    //   console.log("Search data", data);
+    // })
+    var fromDate = moment($("#startDate").val()).format("YYYY-MM-DD");
+    var toDate = moment($("#endDate").val()).format("YYYY-MM-DD");
+    // let newArray = [];
+    // newArray.push({
+    //   "range": {
+    //     "data.issuedOn": {
+    //       "gte": fromDate,
+    //       "lte": toDate
+    //     }
+    //   }
+    // })
+    var queryData = {
+
+      "request": {
+        "query": {
+          "bool": {
+            "must": []
+          }
+        }
+
+      }
+    }
+    queryData.request.query.bool.must.push({
+      "range": {
+        "data.issuedOn": {
+          "gte": fromDate,
+          "lte": toDate
+        }
+      }
+    });
+
+    console.log("QUERRYDATA", queryData);
+    this.certificateService.searchCertificate(queryData).subscribe(data => {
+      console.log("QuerryDATA", data);
+    })
+
+  }
 
   selectedSvgCert(event) {
     event.stopPropagation();

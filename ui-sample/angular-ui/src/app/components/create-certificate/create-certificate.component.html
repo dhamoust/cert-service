@@ -137,6 +137,7 @@
 					<div class="ui right attached segment" suiTabContent="6">
 						<p class="tac">Notification</p>
 
+
 						<!-- <span class="svg__width">
 								<svg-icon class="svg__icon" [src]="certificate" [stretch]="true"></svg-icon>
 							</span> -->
@@ -145,7 +146,7 @@
 						<div class="alligDatepicker">
 							<div>
 								<mat-label>From date</mat-label>
-								<input matInput [matDatepicker]="Frompicker">
+								<input id="startDate" matInput [matDatepicker]="Frompicker">
 								<mat-datepicker-toggle matSuffix [for]="Frompicker"></mat-datepicker-toggle>
 								<mat-datepicker #Frompicker></mat-datepicker>
 							</div>
@@ -153,9 +154,19 @@
 							<div>
 
 								<mat-label>To date </mat-label>
-								<input matInput [matDatepicker]="Topicker">
+								<input id="endDate" matInput [matDatepicker]="Topicker">
 								<mat-datepicker-toggle matSuffix [for]="Topicker"></mat-datepicker-toggle>
 								<mat-datepicker #Topicker></mat-datepicker>
+							</div>
+							<!-- <div class="example-header">
+								
+
+								<input matInput (keyup)="applyFilter($event.target.value)"
+									placeholder="Search by name or email" />
+
+							</div> -->
+							<div class="mt-20 d-flex flex-jc-flex-end">
+								<button class="ui blue button" (click)="applyFilter()">Search</button>
 							</div>
 						</div>
 						<!-- </mat-form-field> -->
