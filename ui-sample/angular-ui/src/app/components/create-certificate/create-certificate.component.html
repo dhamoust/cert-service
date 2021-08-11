@@ -197,27 +197,39 @@
 						</div>
 						<!-- </mat-form-field> -->
 
-						<table>
-							<tr>
-								<th>Select</th>
-								<th>Date</th>
-								<th>Registration No.</th>
-								<th>Certificate No.</th>
-								<th>Issuer Name</th>
-							</tr>
-							<tr *ngFor="let showCert of showAllCertToSendEmail">
-								<td><input type="checkbox" /></td>
-								<td>{{ showCert.date.split("T")[0] }}</td>
-								<td>{{ showCert.cert }}</td>
-								<td>{{ showCert.reg }}</td>
-								<td>{{ showCert.name }}</td>
-							</tr>
+						<table id="certTable">
+							<thead>
+								<tr>
+									<th>Select</th>
+									<th>Date</th>
+									<th>Registration No.</th>
+									<th>Certificate No.</th>
+									<th>Issuer Name</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr *ngFor="let showCert of showAllCertToSendEmail">
+									<td>
+										<input
+											type="checkbox"
+											[attr.data-email]="showCert.recipientEmail"
+											[attr.data-url]="showCert.pdfUrl"
+											[attr.data-name]="showCert.recipientName"
+											[attr.data-course]="showCert.courseName"
+										/>
+									</td>
+									<td>{{ showCert.date.split("T")[0] }}</td>
+									<td>{{ showCert.regNo }}</td>
+									<td>{{ showCert.certNo }}</td>
+									<td>{{ showCert.issuerName }}</td>
+								</tr>
+							</tbody>
 						</table>
 						<br />
 						<!-- <input id="btnGet" type="button" value="Send Notification" /> -->
 						<!-- .svg Close -->
 						<div class="mt-20 d-flex flex-jc-flex-end">
-							<button class="ui blue button">Send Notification</button>
+							<button class="ui blue button" (click)="sendMultipleNotifications()">Send Notification</button>
 						</div>
 					</div>
 				</div>
