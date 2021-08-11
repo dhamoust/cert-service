@@ -10,7 +10,8 @@
 		"DOWLOAD_PDF": "/v1/user/certs/download",
 		"SHOW_CERT": "/templates/svg",
 		"EMAIL_NOTIFICATION": "/user/email",
-		"SEARCH_CERT": "https://58ef38df1cba.ngrok.io/certs/v1/registry/search"
+		"DISPLAY_CERT": "http://5a92563f1665.ngrok.io/certs/v1/registry/search",
+		"SEARCH_CERT": "http://5a92563f1665.ngrok.io/certs/v1/registry/search"
 	},
 	"PAGE_LIMIT": 20
 }
