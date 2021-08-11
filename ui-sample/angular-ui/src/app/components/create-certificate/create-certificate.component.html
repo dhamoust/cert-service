@@ -59,7 +59,7 @@
 								[title]="
 									certificate.endsWith('niitMeritHtml.svg')
 										? 'NIIT MERIT ZIP'
-										: certificate.endsWith('NiitParticipationHTML.svg')
+										: certificate.endsWith('niitParticipationHtml.svg')
 										? 'NIIT PARTICIPATION ZIP'
 										: certificate.endsWith('niitParticipation.svg')
 										? 'NIIT PARTICIPATION SVG'
@@ -152,72 +152,62 @@
 							<button class="mr-20 sb-btn sb-btn-normal primary" (click)="createCertificate()">
 								{{ resourceService?.frmelmnts?.btn?.generate }}
 							</button>
-							<!-- <br>
-							<br>
-							<div>
-								<span>
-									<sui-checkbox>Notify to the user</sui-checkbox>
-								</span>
-							</div> -->
 						</div>
 					</div>
 
 					<div class="ui right attached segment" suiTabContent="6">
 						<p class="tac">Notification</p>
-
-						<!-- <span class="svg__width">
-								<svg-icon class="svg__icon" [src]="certificate" [stretch]="true"></svg-icon>
-							</span> -->
-
-						<!-- <mat-form-field appearance="fill"> -->
 						<div class="alligDatepicker">
 							<div>
-								<mat-label>From date</mat-label>
+								<mat-label>From </mat-label>
 								<input id="startDate" matInput [matDatepicker]="Frompicker" />
 								<mat-datepicker-toggle matSuffix [for]="Frompicker"></mat-datepicker-toggle>
 								<mat-datepicker #Frompicker></mat-datepicker>
 							</div>
 							<br />
 							<div>
-								<mat-label>To date </mat-label>
+								<mat-label>To </mat-label>
 								<input id="endDate" matInput [matDatepicker]="Topicker" />
 								<mat-datepicker-toggle matSuffix [for]="Topicker"></mat-datepicker-toggle>
 								<mat-datepicker #Topicker></mat-datepicker>
 							</div>
-							<!-- <div class="example-header">
-
-
-								<input matInput (keyup)="applyFilter($event.target.value)"
-									placeholder="Search by name or email" />
-
-							</div> -->
 							<div class="mt-20 d-flex flex-jc-flex-end">
+								<button class="ui danger button" (click)="clearApplyFilter()">Reset</button>
 								<button class="ui blue button" (click)="applyFilter()">Search</button>
 							</div>
 						</div>
-						<!-- </mat-form-field> -->
 
-						<table>
-							<tr>
-								<th>Select</th>
-								<th>Date</th>
-								<th>Registration No.</th>
-								<th>Certificate No.</th>
-								<th>Issuer Name</th>
-							</tr>
-							<tr *ngFor="let showCert of showAllCertToSendEmail">
-								<td><input type="checkbox" /></td>
-								<td>{{ showCert.date.split("T")[0] }}</td>
-								<td>{{ showCert.cert }}</td>
-								<td>{{ showCert.reg }}</td>
-								<td>{{ showCert.name }}</td>
-							</tr>
+						<table id="certTable">
+							<thead>
+								<tr>
+									<th>Select</th>
+									<th>Date</th>
+									<th>Registration No.</th>
+									<th>Certificate No.</th>
+									<th>Issuer Name</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr *ngFor="let showCert of showAllCertToSendEmail">
+									<td>
+										<input
+											type="checkbox"
+											[attr.data-email]="showCert.recipientEmail"
+											[attr.data-url]="showCert.pdfUrl"
+											[attr.data-name]="showCert.recipientName"
+											[attr.data-course]="showCert.courseName"
+										/>
+									</td>
+									<td>{{ showCert.date.split("T")[0] }}</td>
+									<td>{{ showCert.regNo }}</td>
+									<td>{{ showCert.certNo }}</td>
+									<td>{{ showCert.issuerName }}</td>
+								</tr>
+							</tbody>
 						</table>
 						<br />
-						<!-- <input id="btnGet" type="button" value="Send Notification" /> -->
-						<!-- .svg Close -->
 						<div class="mt-20 d-flex flex-jc-flex-end">
-							<button class="ui blue button">Send Notification</button>
+							<button class="ui blue button" (click)="sendMultipleNotifications()">Send Notification</button>
 						</div>
 					</div>
 				</div>

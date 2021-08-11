@@ -47,6 +47,8 @@ export class CreateCertificateComponent implements OnInit {
   certificateSelected;
   emailCertificateObject: IEmailCertificate;
   showAllCertToSendEmail = [];
+  sendUserNotificationArray = [];
+  getCertDataToSendEmail = [];
 
   constructor(dataService: DataService, formService: FormService, certificateService: CertificateService, resourceService: ResourceService, router: Router) {
     this.dataService = dataService;
@@ -75,10 +77,10 @@ export class CreateCertificateComponent implements OnInit {
   getTemplates() {
     this.certificateService.getCertificateList().subscribe(res => {
       for (const key in res.result) {
-        if (key.endsWith(`niitMeritHtml`)) {
+        if (key.endsWith(`niitMeritCertificateHtml`)) {
           res.result[key] = `../../assets/certificates/niitMeritHtml.svg`;
         }
-        if (key.endsWith(`niitMeritCertificateHtml`)) {
+        if (key.endsWith(`niitParticipationHtml`)) {
           res.result[key] = `../../assets/certificates/niitParticipationHtml.svg`;
         }
       }
@@ -97,8 +99,8 @@ export class CreateCertificateComponent implements OnInit {
       },
       url:
         this.showAllCertsKeys[this.certificateSelected].endsWith('Html')
-          ? urlConfig.URLS.GENERTATE_CERT_HTML
-          : urlConfig.URLS.GENERTATE_CERT_SVG
+          ? urlConfig.URLS.GENERATE_CERT_HTML
+          : urlConfig.URLS.GENERATE_CERT_SVG
     };
     this.dataService.post(requestData).subscribe(res => {
       console.log("RESPONSE", res)
@@ -118,9 +120,9 @@ export class CreateCertificateComponent implements OnInit {
         courseName: certificateData.courseName,
         recipientEmail: certificateData.data[0].recipientEmail,
         recipientName: certificateData.data[0].recipientName
-
-      }
-      this.notifyUser(emailnotifier);
+      };
+      this.sendUserNotificationArray.push(emailnotifier);
+      this.notifyUser(this.sendUserNotificationArray);
 
     });
   }
@@ -136,7 +138,7 @@ export class CreateCertificateComponent implements OnInit {
       issuer: {},
       signatoryList: [],
       htmlTemplateId: '',
-      // svgTemplateId: '',
+      svgTemplateId: '',
       courseName: '',
       location: '',
       marks: '',
@@ -144,8 +146,8 @@ export class CreateCertificateComponent implements OnInit {
       description: '',
       certificateNum: '',
       studentRegNo: '',
-      // htmlTemplate: '',
-      // svgTemplate: ''
+      htmlTemplate: '',
+      svgTemplate: ''
     };
     const data = [{
       recipientName: requestData.recipientName,
@@ -165,10 +167,10 @@ export class CreateCertificateComponent implements OnInit {
     certificate.data = data;
     certificate.issuer = issuer;
     certificate.signatoryList = signatoryList;
-    // certificate.htmlTemplate = this.showAllCertsKeys[this.certificateSelected];
-    // certificate.svgTemplate = this.showAllCertsKeys[this.certificateSelected];
+    certificate.htmlTemplate = this.showAllCertsKeys[this.certificateSelected];
+    certificate.svgTemplate = this.showAllCertsKeys[this.certificateSelected];
     certificate.htmlTemplateId = this.showAllCertsKeys[this.certificateSelected];
-    // certificate.svgTemplateId = this.showAllCertsKeys[this.certificateSelected];
+    certificate.svgTemplateId = this.showAllCertsKeys[this.certificateSelected];
     certificate.courseName = requestData.courseName;
     certificate.location = requestData.location;
     certificate.marks = requestData.marks;
@@ -244,10 +246,7 @@ export class CreateCertificateComponent implements OnInit {
     })
   }
 
-
   applyFilter() {
-    var fromDate = moment($("#startDate").val()).format("YYYY-MM-DD");
-    var toDate = moment($("#endDate").val()).format("YYYY-MM-DD");
     var queryData = {
       "request": {
         "query": {
@@ -260,17 +259,50 @@ export class CreateCertificateComponent implements OnInit {
     queryData.request.query.bool.must.push({
       "range": {
         "data.issuedOn": {
-          "gte": fromDate,
-          "lte": toDate
+          "gte": moment($("#startDate").val()).format("YYYY-MM-DD"),
+          "lte": moment($("#endDate").val()).format("YYYY-MM-DD")
         }
       }
     });
 
-    console.log("QUERRYDATA", queryData);
     this.certificateService.searchCertificate(JSON.stringify(queryData)).subscribe(data => {
-      console.log("QuerryDATA", data);
+      this.showAllCertToSendEmail = [];
+      let { result: { response: { content: resData } } } = data;
+      console.log(data);
+      resData.forEach(res => {
+        let {
+          _source: {
+            pdfUrl: pdfUrl,
+            data: {
+              recipientEmail: recipientEmail,
+              issuedOn: date,
+              studentRegNo: regNo,
+              certificateNum: certNo,
+              recipient: { name: recipientName },
+              badge: { issuer: { name: issuerName }, name: courseName }
+            }
+          }
+        } = res;
+        this.showAllCertToSendEmail.push({
+          date,
+          certNo,
+          regNo,
+          issuerName,
+          recipientEmail,
+          pdfUrl,
+          recipientName,
+          courseName
+        });
+      });
+      console.log(this.showAllCertToSendEmail);
     })
 
+  }
+
+  clearApplyFilter() {
+    $("#startDate").val('');
+    $("#endDate").val('')
+    this.showAllCert();
   }
 
   selectedSvgCert(event) {
@@ -303,34 +335,55 @@ export class CreateCertificateComponent implements OnInit {
   }
 
   showAllCert() {
+    this.showAllCertToSendEmail = [];
     this.certificateService.searchCertificate({ "request": { "query": { "bool": { } } } }).subscribe(data => {
       let { result: { response: { content: resData } } } = data;
       console.log(data);
       resData.forEach(res => {
         let {
           _source: {
+            pdfUrl: pdfUrl,
             data: {
+              recipientEmail: recipientEmail,
               issuedOn: date,
-              certificateNum: cert,
-              recipient: { identity: reg, name: name }
+              studentRegNo: regNo,
+              certificateNum: certNo,
+              recipient: { name: recipientName },
+              badge: { issuer: { name: issuerName }, name: courseName }
             }
           }
         } = res;
         this.showAllCertToSendEmail.push({
           date,
-          cert,
-          reg,
-          name,
-        //   email,
-        //   url,
-        //   courses
+          certNo,
+          regNo,
+          issuerName,
+          recipientEmail,
+          pdfUrl,
+          recipientName,
+          courseName
         });
-        // console.table("issuedOn", date);
-        // console.table("identity", cert);
-        // console.table("certificateNum", reg);
-        // console.table("QuerryDATA", name);
       });
       console.log(this.showAllCertToSendEmail);
     })
+  }
+
+  sendMultipleNotifications() {
+    this.sendUserNotificationArray = [];
+    let getParentNode = document.getElementById("certTable"),
+        findCheckBoxes = getParentNode.getElementsByTagName("input");
+
+    for (var i = 0; i < findCheckBoxes.length; i++) {
+      if (findCheckBoxes[i].checked) {
+        console.log($(findCheckBoxes[i]).data("email"));
+        this.sendUserNotificationArray.push({
+          pdfUrl: $(findCheckBoxes[i]).data("url"),
+          courseName: $(findCheckBoxes[i]).data("course"),
+          recipientEmail: $(findCheckBoxes[i]).data("email"),
+          recipientName: $(findCheckBoxes[i]).data("name"),
+        });
+      }
+    }
+    this.notifyUser(this.sendUserNotificationArray.filter((item,index) => this.sendUserNotificationArray.indexOf(item) === index));
   }
 }
