@@ -301,6 +301,7 @@ export class CreateCertificateComponent implements OnInit {
   clearApplyFilter() {
     $("#startDate").val('');
     $("#endDate").val('')
+    $("#searchBy").val('');
     this.showAllCert();
   }
 
@@ -387,7 +388,9 @@ export class CreateCertificateComponent implements OnInit {
   }
 
   searchByFilter() {
-    var queryData = {
+    const searchData = $("#searchBy").val();
+    searchData.toLowerCase();
+    let queryData = {
       "request": {
         "query": {
           "bool": {
@@ -396,15 +399,20 @@ export class CreateCertificateComponent implements OnInit {
         }
       }
     }
-    queryData.request.query.bool.must.push({
-      "range": {
-        "data.issuedOn": {
-          "gte": moment($("#startDate").val()).format("YYYY-MM-DD"),
-          "lte": moment($("#endDate").val()).format("YYYY-MM-DD")
-        }
-      }
-    });
-
+    if(searchData.startsWith("R")) {
+      queryData.request.query.bool.must.push(
+      { "match": { "data.studentRegNo": searchData } },
+    );
+    } else if(searchData.startsWith("C")) {
+      queryData.request.query.bool.must.push(
+      { "match": { "data.certificateNum": searchData } }
+    );
+    } else {
+      queryData.request.query.bool.must.push(
+      { "match": { "data.badge.issuer.name": searchData } },
+    );
+    }
+    console.log(queryData);
     this.certificateService.searchCertificate(JSON.stringify(queryData)).subscribe(data => {
       this.showAllCertToSendEmail = [];
       let { result: { response: { content: resData } } } = data;
@@ -435,6 +443,6 @@ export class CreateCertificateComponent implements OnInit {
         });
       });
       console.log(this.showAllCertToSendEmail);
-    })
+    });
   }
 }
