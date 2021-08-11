@@ -296,7 +296,6 @@ export class CreateCertificateComponent implements OnInit {
       });
       console.log(this.showAllCertToSendEmail);
     })
-
   }
 
   clearApplyFilter() {
@@ -385,5 +384,57 @@ export class CreateCertificateComponent implements OnInit {
       }
     }
     this.notifyUser(this.sendUserNotificationArray.filter((item,index) => this.sendUserNotificationArray.indexOf(item) === index));
+  }
+
+  searchByFilter() {
+    var queryData = {
+      "request": {
+        "query": {
+          "bool": {
+            "must": []
+          }
+        }
+      }
+    }
+    queryData.request.query.bool.must.push({
+      "range": {
+        "data.issuedOn": {
+          "gte": moment($("#startDate").val()).format("YYYY-MM-DD"),
+          "lte": moment($("#endDate").val()).format("YYYY-MM-DD")
+        }
+      }
+    });
+
+    this.certificateService.searchCertificate(JSON.stringify(queryData)).subscribe(data => {
+      this.showAllCertToSendEmail = [];
+      let { result: { response: { content: resData } } } = data;
+      console.log(data);
+      resData.forEach(res => {
+        let {
+          _source: {
+            pdfUrl: pdfUrl,
+            data: {
+              recipientEmail: recipientEmail,
+              issuedOn: date,
+              studentRegNo: regNo,
+              certificateNum: certNo,
+              recipient: { name: recipientName },
+              badge: { issuer: { name: issuerName }, name: courseName }
+            }
+          }
+        } = res;
+        this.showAllCertToSendEmail.push({
+          date,
+          certNo,
+          regNo,
+          issuerName,
+          recipientEmail,
+          pdfUrl,
+          recipientName,
+          courseName
+        });
+      });
+      console.log(this.showAllCertToSendEmail);
+    })
   }
 }

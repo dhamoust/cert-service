@@ -156,7 +156,13 @@
 					</div>
 
 					<div class="ui right attached segment" suiTabContent="6">
-						<p class="tac">Notification</p>
+						<div>
+							<p class="tac">Notification</p>
+							<div class="mt-20 d-flex flex-jc-flex-end">
+								<input id="searchBy" size="30" matInput type="search" placeholder="Search by Issuer, Certificate or Registration" />
+								<button class="ui blue button" (click)="searchByFilter()">Search</button>
+							</div>
+						</div>
 						<div class="alligDatepicker">
 							<div>
 								<mat-label>From </mat-label>
