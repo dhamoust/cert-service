@@ -94,6 +94,13 @@ tr:nth-child(even) {
 
 
 #searchBy[type="search"]::placeholder {
-	font-size: 12px;
+	font-size: 14px;
 	border: 0 solid transparent;
+}
+
+
+#searchBy{
+	margin-right: 3px;
+    border-radius: 4px;
+
 }

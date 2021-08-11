@@ -336,7 +336,7 @@ export class CreateCertificateComponent implements OnInit {
 
   showAllCert() {
     this.showAllCertToSendEmail = [];
-    this.certificateService.searchCertificate({ "request": { "query": { "bool": { } } } }).subscribe(data => {
+    this.certificateService.searchCertificate({ "request": { "query": { "bool": {} } } }).subscribe(data => {
       let { result: { response: { content: resData } } } = data;
       console.log(data);
       resData.forEach(res => {
@@ -371,7 +371,7 @@ export class CreateCertificateComponent implements OnInit {
   sendMultipleNotifications() {
     this.sendUserNotificationArray = [];
     let getParentNode = document.getElementById("certTable"),
-        findCheckBoxes = getParentNode.getElementsByTagName("input");
+      findCheckBoxes = getParentNode.getElementsByTagName("input");
 
     for (var i = 0; i < findCheckBoxes.length; i++) {
       if (findCheckBoxes[i].checked) {
@@ -384,7 +384,7 @@ export class CreateCertificateComponent implements OnInit {
         });
       }
     }
-    this.notifyUser(this.sendUserNotificationArray.filter((item,index) => this.sendUserNotificationArray.indexOf(item) === index));
+    this.notifyUser(this.sendUserNotificationArray.filter((item, index) => this.sendUserNotificationArray.indexOf(item) === index));
   }
 
   searchByFilter() {
@@ -399,18 +399,19 @@ export class CreateCertificateComponent implements OnInit {
         }
       }
     }
-    if(searchData.startsWith("R")) {
+    if (searchData.startsWith("R")) {
       queryData.request.query.bool.must.push(
-      { "match": { "data.studentRegNo": searchData } },
-    );
-    } else if(searchData.startsWith("C")) {
+        { "match": { "data.studentRegNo": searchData } },
+      );
+    } else if (searchData.startsWith("C")) {
       queryData.request.query.bool.must.push(
-      { "match": { "data.certificateNum": searchData } }
-    );
+        { "match": { "data.certificateNum": searchData } }
+      );
     } else {
       queryData.request.query.bool.must.push(
-      { "match": { "data.badge.issuer.name": searchData } },
-    );
+        { "match": { "data.badge.issuer.name": searchData } },
+
+      );
     }
     console.log(queryData);
     this.certificateService.searchCertificate(JSON.stringify(queryData)).subscribe(data => {
