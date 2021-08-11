@@ -10,40 +10,21 @@
 						<a class="item" suiTabHeader="1" [(isActive)]="templateActive">Select template</a>
 						<!-- <a class="item" suiTabHeader="2" [(isActive)]="createTab">Create template</a> -->
 
-						<a
-							class="item"
-							suiTabHeader="2"
-							[(isActive)]="recipientTab"
+						<a class="item" suiTabHeader="2" [(isActive)]="recipientTab"
 							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
-							[isDisabled]="certSelected.length === 0 ? true : false"
-							>Recipient & Issuer details</a
-						>
-						<a
-							class="item"
-							suiTabHeader="3"
-							[(isActive)]="signatoryTab"
+							[isDisabled]="certSelected.length === 0 ? true : false">Recipient & Issuer details</a>
+						<a class="item" suiTabHeader="3" [(isActive)]="signatoryTab"
 							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
-							[isDisabled]="certSelected.length === 0 ? true : false"
-							>Signatory details</a
-						>
-						<a
-							class="item"
-							suiTabHeader="4"
-							[(isActive)]="storageTab"
+							[isDisabled]="certSelected.length === 0 ? true : false">Signatory details</a>
+						<a class="item" suiTabHeader="4" [(isActive)]="storageTab"
 							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
-							[isDisabled]="certSelected.length === 0 ? true : false"
-							>Storage Info</a
-						>
-						<a
-							class="item"
-							suiTabHeader="5"
-							[(isActive)]="generateTab"
+							[isDisabled]="certSelected.length === 0 ? true : false">Storage Info</a>
+						<a class="item" suiTabHeader="5" [(isActive)]="generateTab"
 							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
-							[isDisabled]="certSelected.length === 0 ? true : false"
-							>Preview/Generate</a
-						>
+							[isDisabled]="certSelected.length === 0 ? true : false">Preview/Generate</a>
 
-						<a class="item" suiTabHeader="6" [(isActive)]="notifyTab" (click)="showAllCert()">Notification</a>
+						<a class="item" suiTabHeader="6" [(isActive)]="notifyTab"
+							(click)="showAllCert()">Notification</a>
 					</div>
 				</div>
 
@@ -51,12 +32,8 @@
 					<div class="ui right attached segment" suiTabContent="1">
 						<p class="tac">Select Template</p>
 						<div class="svg__overflow svg__display">
-							<span
-								class="svg__width"
-								(click)="selectedSvgCert($event)"
-								[id]="certificate"
-								*ngFor="let certificate of showAllCertsValues"
-								[title]="
+							<span class="svg__width" (click)="selectedSvgCert($event)" [id]="certificate"
+								*ngFor="let certificate of showAllCertsValues" [title]="
 									certificate.endsWith('niitMeritHtml.svg')
 										? 'NIIT MERIT ZIP'
 										: certificate.endsWith('niitParticipationHtml.svg')
@@ -66,42 +43,33 @@
 										: certificate.endsWith('meritCertificate.svg')
 										? 'NIIT MERIT SVG'
 										: ''
-								"
-							>
-								<svg-icon
-									class="svg__icon"
-									[src]="certificate"
-									[stretch]="true"
-									[svgStyle]="
+								">
+								<svg-icon class="svg__icon" [src]="certificate" [stretch]="true" [svgStyle]="
 										certificate.endsWith('Html.svg')
 											? { 'width.px': 100, 'height.px': 100, 'margin.px': '3 -2 -4 -2' }
 											: { 'height.px': 200, 'margin.px': '-2 -2 -7 -2' }
-									"
-								>
+									">
 								</svg-icon>
 								<br />
 								<br />
 								{{
-									certificate.endsWith("niitMeritHtml.svg")
-										? "NIIT MERIT ZIP"
-										: certificate.endsWith("niitParticipationHtml.svg")
-										? "NIIT PARTICIPATION ZIP"
-										: certificate.endsWith("niitParticipation.svg")
-										? "NIIT PARTICIPATION SVG"
-										: certificate.endsWith("meritCertificate.svg")
-										? "NIIT MERIT SVG"
-										: ""
+								certificate.endsWith("niitMeritHtml.svg")
+								? "NIIT MERIT ZIP"
+								: certificate.endsWith("niitParticipationHtml.svg")
+								? "NIIT PARTICIPATION ZIP"
+								: certificate.endsWith("niitParticipation.svg")
+								? "NIIT PARTICIPATION SVG"
+								: certificate.endsWith("meritCertificate.svg")
+								? "NIIT MERIT SVG"
+								: ""
 								}}
 							</span>
 						</div>
 						<!-- .svg Close -->
 						<div class="mt-20 d-flex flex-jc-flex-end">
-							<button
-								class="ui blue button"
-								(click)="recipientTab = true"
+							<button class="ui blue button" (click)="recipientTab = true"
 								[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
-								[disabled]="certSelected.length === 0 ? true : false"
-							>
+								[disabled]="certSelected.length === 0 ? true : false">
 								Next
 							</button>
 						</div>
@@ -109,7 +77,8 @@
 
 					<div class="ui right attached segment" suiTabContent="2">
 						<p class="tac">Enter Recipient Details</p>
-						<app-default-template #formData [formFieldProperties]="formFieldProperties"> </app-default-template>
+						<app-default-template #formData [formFieldProperties]="formFieldProperties">
+						</app-default-template>
 						<div class="mt-20 d-flex flex-jc-flex-end">
 							<button class="ui blue button" (click)="signatoryTab = true">Next</button>
 						</div>
@@ -119,7 +88,8 @@
 						<p class="tac">Enter Signatory Details</p>
 						<div *ngIf="signatoryCount > 0">
 							<div *ngFor="let i of signatory">
-								<app-default-template #signatoryForm [formFieldProperties]="signatoryFieldProperties"> </app-default-template>
+								<app-default-template #signatoryForm [formFieldProperties]="signatoryFieldProperties">
+								</app-default-template>
 							</div>
 							<div id="icons">
 								<h4 class="mt-20"><i class="fas fa-minus-circle" (click)="removeSignatory()"></i></h4>
@@ -137,7 +107,8 @@
 							<sui-checkbox [(ngModel)]="storageInfo">yes</sui-checkbox>
 						</div>
 						<div *ngIf="storageInfo">
-							<app-default-template #storageForm [formFieldProperties]="storeFieldProperties"> </app-default-template>
+							<app-default-template #storageForm [formFieldProperties]="storeFieldProperties">
+							</app-default-template>
 						</div>
 						<div class="mt-20 d-flex flex-jc-flex-end">
 							<button class="ui blue button" (click)="generateTab = true">Next</button>
@@ -157,21 +128,21 @@
 
 					<div class="ui right attached segment" suiTabContent="6">
 						<p class="tac">Notification</p>
-						<div class="alligDatepicker">
-							<div>
+						<div class="alligDatepickerButton">
+							<div class="allignDatePicker">
 								<mat-label>From </mat-label>
 								<input id="startDate" matInput [matDatepicker]="Frompicker" />
 								<mat-datepicker-toggle matSuffix [for]="Frompicker"></mat-datepicker-toggle>
 								<mat-datepicker #Frompicker></mat-datepicker>
 							</div>
 							<br />
-							<div>
+							<div class="allignDatePicker">
 								<mat-label>To </mat-label>
 								<input id="endDate" matInput [matDatepicker]="Topicker" />
 								<mat-datepicker-toggle matSuffix [for]="Topicker"></mat-datepicker-toggle>
 								<mat-datepicker #Topicker></mat-datepicker>
 							</div>
-							<div class="mt-20 d-flex flex-jc-flex-end">
+							<div class="mt-20 d-flex flex-jc-flex-end mb-20">
 								<button class="ui danger button" (click)="clearApplyFilter()">Reset</button>
 								<button class="ui blue button" (click)="applyFilter()">Search</button>
 							</div>
@@ -190,13 +161,9 @@
 							<tbody>
 								<tr *ngFor="let showCert of showAllCertToSendEmail">
 									<td>
-										<input
-											type="checkbox"
-											[attr.data-email]="showCert.recipientEmail"
-											[attr.data-url]="showCert.pdfUrl"
-											[attr.data-name]="showCert.recipientName"
-											[attr.data-course]="showCert.courseName"
-										/>
+										<input type="checkbox" [attr.data-email]="showCert.recipientEmail"
+											[attr.data-url]="showCert.pdfUrl" [attr.data-name]="showCert.recipientName"
+											[attr.data-course]="showCert.courseName" />
 									</td>
 									<td>{{ showCert.date.split("T")[0] }}</td>
 									<td>{{ showCert.regNo }}</td>
@@ -207,7 +174,8 @@
 						</table>
 						<br />
 						<div class="mt-20 d-flex flex-jc-flex-end">
-							<button class="ui blue button" (click)="sendMultipleNotifications()">Send Notification</button>
+							<button class="ui blue button" (click)="sendMultipleNotifications()">Send
+								Notification</button>
 						</div>
 					</div>
 				</div>
