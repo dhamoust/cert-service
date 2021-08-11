@@ -36,17 +36,17 @@ export class CertificateService {
     const requestBody = emailCertificate;
     console.log("requestBody", requestBody)
     return this.http.post(`${urlConfig.URLS.BASE_URL}${urlConfig.URLS.EMAIL_NOTIFICATION}`, requestBody, { 'headers': headers })
-
-
   }
-
-
-
 
   public searchCertificate(queryInput): Observable<any> {
     const requestBody = queryInput;
     const headers = { 'content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-    return this.http.post(`${urlConfig.URLS.BASE_URL}${urlConfig.URLS.SEARCH_CERT}`, requestBody, { 'headers': headers })
+    return this.http.post(`${urlConfig.URLS.SEARCH_CERT}`, requestBody, { headers } )
+  }
 
+  public displayCertificate(queryInput): Observable<any> {
+    const requestBody = queryInput;
+    const headers = { 'content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    return this.http.post(`${urlConfig.URLS.DISPLAY_CERT}`, requestBody, { headers } )
   }
 }

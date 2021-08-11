@@ -14,6 +14,7 @@ import { filter } from 'rxjs/operators';
 export class DefaultTemplateComponent implements OnInit, OnChanges {
 
   @Input() formFieldProperties: any;
+  @Input() selectedTemplate: any;
   public formInputData: any = {};
   router: Router;
   activatedRoute: ActivatedRoute;

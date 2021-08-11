@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, QueryList, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, OnChanges, ElementRef } from '@angular/core';
 import { DataService } from '../../services/data/data.service';
 import { ResourceService } from '../../services/resource/resource.service';
 import { FormService } from '../../services/forms/form.service';
@@ -12,14 +12,12 @@ import { IEmailCertificate } from 'src/app/services/email-certificate.model';
 import * as $ from 'jquery';
 import moment from 'moment';
 
-
 @Component({
   selector: 'app-create-certificate',
   templateUrl: './create-certificate.component.html',
   styleUrls: ['./create-certificate.component.scss']
 })
 export class CreateCertificateComponent implements OnInit {
-
   @ViewChild('formData') formData: DefaultTemplateComponent;
   @ViewChildren('signatoryForm') signatoryFormData: QueryList<DefaultTemplateComponent>;
   @ViewChild('storageForm') storageFormData: DefaultTemplateComponent;
@@ -29,6 +27,7 @@ export class CreateCertificateComponent implements OnInit {
   resourceService: ResourceService;
   pdfUrl: string;
   public formFieldProperties: any;
+  public selectedTemplate: any;
   public storeFieldProperties: any;
   public signatoryFieldProperties: any;
   public req: CertReq;
@@ -47,6 +46,7 @@ export class CreateCertificateComponent implements OnInit {
   certSelected = [];
   certificateSelected;
   emailCertificateObject: IEmailCertificate;
+  showAllCertToSendEmail = [];
 
   constructor(dataService: DataService, formService: FormService, certificateService: CertificateService, resourceService: ResourceService, router: Router) {
     this.dataService = dataService;
@@ -70,6 +70,7 @@ export class CreateCertificateComponent implements OnInit {
       this.storeFieldProperties = res.fields;
     });
   }
+
 
   getTemplates() {
     this.certificateService.getCertificateList().subscribe(res => {
@@ -135,16 +136,16 @@ export class CreateCertificateComponent implements OnInit {
       issuer: {},
       signatoryList: [],
       htmlTemplateId: '',
-      svgTemplateId: '',
+      // svgTemplateId: '',
       courseName: '',
       location: '',
-      courseGrade: '',
+      marks: '',
       name: '',
       description: '',
       certificateNum: '',
       studentRegNo: '',
-      htmlTemplate: '',
-      svgTemplate: ''
+      // htmlTemplate: '',
+      // svgTemplate: ''
     };
     const data = [{
       recipientName: requestData.recipientName,
@@ -164,17 +165,17 @@ export class CreateCertificateComponent implements OnInit {
     certificate.data = data;
     certificate.issuer = issuer;
     certificate.signatoryList = signatoryList;
-    certificate.htmlTemplate = this.showAllCertsKeys[this.certificateSelected];
-    certificate.svgTemplate = this.showAllCertsKeys[this.certificateSelected];
+    // certificate.htmlTemplate = this.showAllCertsKeys[this.certificateSelected];
+    // certificate.svgTemplate = this.showAllCertsKeys[this.certificateSelected];
     certificate.htmlTemplateId = this.showAllCertsKeys[this.certificateSelected];
-    certificate.svgTemplateId = this.showAllCertsKeys[this.certificateSelected];
+    // certificate.svgTemplateId = this.showAllCertsKeys[this.certificateSelected];
     certificate.courseName = requestData.courseName;
-    certificate.location = requestData.courseLocation;
-    certificate.courseGrade = requestData.courseGrade;
+    certificate.location = requestData.location;
+    certificate.marks = requestData.marks;
     certificate.name = requestData.certificateName;
     certificate.description = requestData.certificateDescription;
-    certificate.certificateNum = requestData.certificateNumber;
-    certificate.studentRegNo = requestData.recipientRegistrationNumber;
+    certificate.certificateNum = requestData.certificateNum;
+    certificate.studentRegNo = requestData.studentRegNo;
 
     if (this.preview) {
       certificate['preview'] = "true";
@@ -245,29 +246,15 @@ export class CreateCertificateComponent implements OnInit {
 
 
   applyFilter() {
-    // this.certificateService.searchCertificate(event).subscribe(data => {
-    //   console.log("Search data", data);
-    // })
     var fromDate = moment($("#startDate").val()).format("YYYY-MM-DD");
     var toDate = moment($("#endDate").val()).format("YYYY-MM-DD");
-    // let newArray = [];
-    // newArray.push({
-    //   "range": {
-    //     "data.issuedOn": {
-    //       "gte": fromDate,
-    //       "lte": toDate
-    //     }
-    //   }
-    // })
     var queryData = {
-
       "request": {
         "query": {
           "bool": {
             "must": []
           }
         }
-
       }
     }
     queryData.request.query.bool.must.push({
@@ -280,7 +267,7 @@ export class CreateCertificateComponent implements OnInit {
     });
 
     console.log("QUERRYDATA", queryData);
-    this.certificateService.searchCertificate(queryData).subscribe(data => {
+    this.certificateService.searchCertificate(JSON.stringify(queryData)).subscribe(data => {
       console.log("QuerryDATA", data);
     })
 
@@ -311,5 +298,39 @@ export class CreateCertificateComponent implements OnInit {
     }
     console.log(this.certSelected);
     console.log(this.showAllCertsKeys[this.certificateSelected]);
+    this.selectedTemplate = this.showAllCertsKeys[this.certificateSelected].includes('niitMerit');
+    console.log(this.selectedTemplate);
+  }
+
+  showAllCert() {
+    this.certificateService.searchCertificate({ "request": { "query": { "bool": { } } } }).subscribe(data => {
+      let { result: { response: { content: resData } } } = data;
+      console.log(data);
+      resData.forEach(res => {
+        let {
+          _source: {
+            data: {
+              issuedOn: date,
+              certificateNum: cert,
+              recipient: { identity: reg, name: name }
+            }
+          }
+        } = res;
+        this.showAllCertToSendEmail.push({
+          date,
+          cert,
+          reg,
+          name,
+        //   email,
+        //   url,
+        //   courses
+        });
+        // console.table("issuedOn", date);
+        // console.table("identity", cert);
+        // console.table("certificateNum", reg);
+        // console.table("QuerryDATA", name);
+      });
+      console.log(this.showAllCertToSendEmail);
+    })
   }
 }
