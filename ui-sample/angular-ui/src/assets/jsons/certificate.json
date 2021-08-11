@@ -57,9 +57,9 @@
                 "index": 3
             },
             {
-                "code": "recipientRegistrationNumber",
+                "code": "studentRegNo",
                 "dataType": "text",
-                "name": "recipientRegistrationNumber",
+                "name": "studentRegNo",
                 "label": "Recipient Registration Number",
                 "description": "Recipient Registration Number",
                 "editable": true,
@@ -103,9 +103,9 @@
                 "index": 7
             },
             {
-                "code": "courseLocation",
+                "code": "location",
                 "dataType": "text",
-                "name": "courseLocation",
+                "name": "location",
                 "label": "Course Location",
                 "description": "Course Location",
                 "editable": true,
@@ -120,9 +120,9 @@
                 "index": 8
             },
             {
-                "code": "courseGrade",
+                "code": "marks",
                 "dataType": "text",
-                "name": "courseGrade",
+                "name": "marks",
                 "label": "Course Grade",
                 "description": "Course Grade",
                 "editable": true,
@@ -171,9 +171,9 @@
                 "index": 11
             },
             {
-                "code": "certificateNumber",
+                "code": "certificateNum",
                 "dataType": "text",
-                "name": "certificateNumber",
+                "name": "certificateNum",
                 "label": "Certificate Number",
                 "description": "Certificate Number",
                 "editable": true,
