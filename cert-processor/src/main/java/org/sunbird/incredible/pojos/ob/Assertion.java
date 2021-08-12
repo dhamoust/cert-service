@@ -68,6 +68,8 @@ public class Assertion extends OBBase {
 
     private String implication;
 
+    private String recipientEmail;
+
     public Assertion() {
     }
 
@@ -115,6 +117,13 @@ public class Assertion extends OBBase {
         this.implication = implication;
     }
 
+    public String getRecipientEmail() {
+        return recipientEmail;
+    }
+
+    public void setRecipientEmail(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
+    }
     public String[] getType() {
         return type;
     }

@@ -104,6 +104,10 @@ public class CertificateExtensionBuilder implements IBuilder<CertificateExtensio
         certificateExtension.setImplication(implication);
         return this;
     }
+    public CertificateExtensionBuilder setRecipientEmail(String recipientEmail) {
+        certificateExtension.setRecipientEmail(recipientEmail);
+        return this;
+    }
     @Override
     public CertificateExtension build() {
         return certificateExtension;

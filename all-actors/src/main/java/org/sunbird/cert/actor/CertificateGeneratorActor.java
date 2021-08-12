@@ -48,6 +48,14 @@ public class CertificateGeneratorActor extends BaseActor {
     private static CertsConstant certVar = new CertsConstant();
     private static ObjectMapper mapper = new ObjectMapper();
     String directory = "conf/";
+    private static final String CERT_REGISTRY_SERVICE = "http://localhost:9010";
+    private static final String REGISTRY_PDF_URL = "/certs/v1/registry/add";
+    private static final String REGISTRY_SVG_URL = "/certs/v2/registry/add";
+    private static ObjectMapper requestMapper = new ObjectMapper();
+    static Map<String, String> headerMap = new HashMap<>();
+    static {
+        headerMap.put("Content-Type", "application/json");
+    }
     static {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
@@ -162,12 +170,16 @@ public class CertificateGeneratorActor extends BaseActor {
                 certificateResponse = new CertificateResponseV1(uuid, accessCode, certModel.getIdentifier(), convertStringToMap(jsonData), properties.get(JsonKey.BASE_PATH).concat(pdfLink));
                 Map<String, Object> uploadRes = uploadJson(directory + uuid, certStore, certStoreFactory.setCloudPath(storeParams));
                 certificateResponse.setJsonUrl(properties.get(JsonKey.BASE_PATH).concat((String) uploadRes.get(JsonKey.JSON_URL)));
-
-                Producer<Long, Object> producer = PdfGenerator.createProducer();
-                ProducerRecord prodRecord = new ProducerRecord("certi_test_topic", certificateResponse.toString());
-                producer.send(prodRecord);
-                producer.close();
-//                PdfGenerator.syncCertRegistry(certificateResponse);
+//                Producer<Long, Object> producer = PdfGenerator.createProducer();
+//                ProducerRecord prodRecord = new ProducerRecord("sunbirddev.generate.certificate.request", certificateResponse.toString());
+//                producer.send(prodRecord);
+//                producer.close();
+                String apiToCall = CERT_REGISTRY_SERVICE + REGISTRY_PDF_URL;
+                Map<String, Object> req = new HashMap<>();
+                req.put(JsonKey.REQUEST, certificateResponse);
+                String requestBody = requestMapper.writeValueAsString(req);
+                CertRegistryAsyncService.makeAsyncPostCall(apiToCall, requestBody, headerMap);
+//                PdfGenerator.syncCertRegistry(certificateResponse, apiToCall);
                 certUrlList.add(mapper.convertValue(certificateResponse, new TypeReference<Map<String, Object>>() {
                 }));
             } catch (Exception ex) {
@@ -239,6 +251,12 @@ public class CertificateGeneratorActor extends BaseActor {
                 CertificateResponse certificateResponse = new CertificateResponse(certificateGenerator.getUUID(certificateExtension), (String) qrMap.get(JsonKey.ACCESS_CODE), certModel.getIdentifier(), mapper.convertValue(certificateExtension, Map.class));
                 certificateResponse.setJsonUrl(properties.get(JsonKey.BASE_PATH).concat(jsonUrl));
 //                certificateResponse.setSvgUrl(properties.get(JsonKey.BASE_PATH).concat(svgUrl));
+                String apiToCall = CERT_REGISTRY_SERVICE + REGISTRY_SVG_URL;
+                Map<String, Object> req = new HashMap<>();
+                req.put(JsonKey.REQUEST, certificateResponse);
+                String requestBody = requestMapper.writeValueAsString(req);
+                CertRegistryAsyncService.makeAsyncPostCall(apiToCall, requestBody, headerMap);
+//                PdfGenerator.syncSvgCertRegistry(certificateResponse, apiToCall);
                 certUrlList.add(mapper.convertValue(certificateResponse, new TypeReference<Map<String, Object>>() {
                 }));
             } catch (Exception ex) {
@@ -349,12 +367,13 @@ public class CertificateGeneratorActor extends BaseActor {
         properties.put(JsonKey.SLUG, certVar.getSlug());
         properties.put(JsonKey.PREVIEW, certVar.getPreview(preview));
         properties.put(JsonKey.BASE_PATH, certVar.getBasePath());
-
+        properties.put(JsonKey.RECIPIENT_EMAIl,(String) ((Map) request.get(JsonKey.CERTIFICATE)).get(JsonKey.RECIPIENT_EMAIl));
         logger.info(request.getRequestContext(), "getProperties:properties got from Constant File ".concat(Collections.singleton(properties.toString()) + ""));
         return properties;
     }
 
     private Map<String, Object> getStorageParamsFromRequestOrEnv(Map<String, Object> storeParams) {
+        logger.info(null , "============Store Params======="+ storeParams);
         if (MapUtils.isNotEmpty(storeParams)) {
             return storeParams;
         } else {
