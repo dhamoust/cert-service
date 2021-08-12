@@ -72,8 +72,6 @@ public class PdfGenerator {
 
     private static final String PRINT_SERVICE_URL = "http://localhost:5000/v1/print/pdf";
 
-    private static final String CERT_REGISTRY_SERVICE_URL = "http://localhost:9010/certs/v1/registry/add";
-
     public static String generate(String htmlTemplateUrl, CertificateExtension certificateExtension , String qrImageUrl,
                                   String container, String path) throws IOException {
         long startTime = System.currentTimeMillis();
@@ -142,8 +140,32 @@ public class PdfGenerator {
       return pdfUrl;
     }
 
-    public static void syncCertRegistry(CertificateResponse certificateRequest) throws IOException {
-        HttpPost httpPost = new HttpPost(CERT_REGISTRY_SERVICE_URL);
+    public static void syncCertRegistry(CertificateResponse certificateRequest, String apiToCall) throws IOException {
+        HttpPost httpPost = new HttpPost(apiToCall);
+        Map<String, Object> req = new HashMap<>();
+        req.put("request",certificateRequest);
+        String json = mapper.writeValueAsString(req);
+        json = new String(json.getBytes(), StandardCharsets.UTF_8);
+        StringEntity entity = new StringEntity(json, StandardCharsets.UTF_8);
+        httpPost.setEntity(entity);
+
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-type", "application/json");
+
+        logger.info("Cert Registry Request : "+ httpPost);
+        CloseableHttpResponse response = client.execute(httpPost);
+        if (response.getStatusLine().getStatusCode() == 200) {
+            try {
+                response.close();
+            } catch (Exception ex) {
+                logger.error("Exception occurred while closing http response.");
+            }
+            logger.info("Data has been synched");
+        }
+    }
+
+    public static void syncSvgCertRegistry(CertificateResponse certificateRequest, String apiToCall) throws IOException {
+        HttpPost httpPost = new HttpPost(apiToCall);
         Map<String, Object> req = new HashMap<>();
         req.put("request",certificateRequest);
         String json = mapper.writeValueAsString(req);

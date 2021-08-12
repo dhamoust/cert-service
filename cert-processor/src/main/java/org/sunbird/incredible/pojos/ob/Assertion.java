@@ -30,7 +30,7 @@ public class Assertion extends OBBase {
     private BadgeClass badge;
 
     /**
-     * IRI or document representing an image representing this users achievement.
+     * IRI or document representing an image representing this user's achievement.
      * This must be a PNG or SVG image. Otherwise, use BadgeClass member.
      */
     private String image;
@@ -67,6 +67,8 @@ public class Assertion extends OBBase {
     private String certificateNum;
 
     private String implication;
+
+    private String recipientEmail;
 
     public Assertion() {
     }
@@ -115,6 +117,13 @@ public class Assertion extends OBBase {
         this.implication = implication;
     }
 
+    public String getRecipientEmail() {
+        return recipientEmail;
+    }
+
+    public void setRecipientEmail(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
+    }
     public String[] getType() {
         return type;
     }

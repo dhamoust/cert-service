@@ -143,8 +143,5 @@
       }
     }
   },
-  "defaultProject": "open-saber-ui",
-  "cli": {
-    "analytics": "4685faa2-c3ed-443b-bdf9-ac37b65a89f6"
-  }
+  "defaultProject": "open-saber-ui"
 }

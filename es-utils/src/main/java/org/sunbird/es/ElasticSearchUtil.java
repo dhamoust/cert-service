@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.sunbird.es;
 
@@ -70,7 +70,7 @@ public class ElasticSearchUtil {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static void createClient(String indexName, String connectionInfo) {
 		if (!esClient.containsKey(indexName)) {
@@ -201,7 +201,7 @@ public class ElasticSearchUtil {
 
 	@SuppressWarnings({ "rawtypes" })
 	public static List<Map> textSearchReturningId(Map<String, Object> matchCriterias, String indexName,
-			String indexType)
+												  String indexType)
 			throws Exception {
 		SearchResponse result = search(matchCriterias, null, indexName, indexType, null, false, 100);
 		return getDocumentsFromSearchResultWithId(result);
@@ -225,7 +225,7 @@ public class ElasticSearchUtil {
 	}
 
 	public static SearchResponse search(Map<String, Object> matchCriterias, Map<String, Object> textFiltersMap,
-			String indexName, String indexType, List<Map<String, Object>> groupBy, boolean isDistinct, int limit)
+										String indexName, String indexType, List<Map<String, Object>> groupBy, boolean isDistinct, int limit)
 			throws Exception {
 		SearchSourceBuilder query = buildJsonForQuery(matchCriterias, textFiltersMap, groupBy, isDistinct, indexName);
 		query.size(limit);
@@ -251,7 +251,7 @@ public class ElasticSearchUtil {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Map<String, Object> getCountFromAggregation(Aggregations aggregations,
-			List<Map<String, Object>> groupByList) {
+															  List<Map<String, Object>> groupByList) {
 		Map<String, Object> countMap = new HashMap<String, Object>();
 		if (aggregations != null) {
 			for (Map<String, Object> aggregationsMap : groupByList) {
@@ -293,8 +293,8 @@ public class ElasticSearchUtil {
 
 	@SuppressWarnings("unchecked")
 	public static SearchSourceBuilder buildJsonForQuery(Map<String, Object> matchCriterias,
-			Map<String, Object> textFiltersMap, List<Map<String, Object>> groupByList, boolean isDistinct,
-			String indexName) {
+														Map<String, Object> textFiltersMap, List<Map<String, Object>> groupByList, boolean isDistinct,
+														String indexName) {
 
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 

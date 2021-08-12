@@ -104,6 +104,9 @@ public class CertificateFactory {
         if (StringUtils.isNotBlank(certModel.getImplication())) {
             certificateExtensionBuilder.setImplication(properties.get(JsonKey.IMPLICATION));
         }
+        if (StringUtils.isNotBlank(certModel.getRecipientEmail())) {
+            certificateExtensionBuilder.setRecipientEmail(properties.get(JsonKey.RECIPIENT_EMAIl));
+        }
         /**
          *
          * Certificate extension object
