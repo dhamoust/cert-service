@@ -21,7 +21,7 @@
 							[isDisabled]="certSelected.length === 0 ? true : false">Storage Info</a>
 						<a class="item" suiTabHeader="5" [(isActive)]="generateTab"
 							[ngStyle]="certSelected.length === 0 ? { cursor: 'not-allowed' } : { cursor: 'pointer' }"
-							[isDisabled]="certSelected.length === 0 ? true : false">Preview/Generate</a>
+							[isDisabled]="certSelected.length === 0 ? true : false">Generate</a>
 
 						<a class="item" suiTabHeader="6" [(isActive)]="notifyTab"
 							(click)="showAllCert()">Notification</a>
@@ -117,9 +117,9 @@
 
 					<div class="ui right attached segment" suiTabContent="5">
 						<div class="buttons flex-jc-center">
-							<button class="sb-btn sb-btn-normal primary" (click)="previewCertificate()">
+							<!-- <button class="sb-btn sb-btn-normal primary" (click)="previewCertificate()">
 								{{ resourceService?.frmelmnts?.btn?.preview }}
-							</button>
+							</button> -->
 							<button class="mr-20 sb-btn sb-btn-normal primary" (click)="createCertificate()">
 								{{ resourceService?.frmelmnts?.btn?.generate }}
 							</button>
