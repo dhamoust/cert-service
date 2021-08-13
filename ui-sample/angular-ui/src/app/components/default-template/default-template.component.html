@@ -6,14 +6,13 @@
 			*ngFor="let field of formFieldProperties; let i = index"
 			class="{{ field.renderingHints.semanticColumnWidth || 'twelve' }} wide column"
 		>
+			<!-- [ngStyle]="selectedTemplate && field.label === 'Course Grade' ? '' : { display: 'none' }" -->
 			<div
 				*ngIf="field.inputType === 'text' || field.inputType === 'number'"
 				class="field"
 				[ngClass]="{ disabled: !field.editable, required: field.required }"
 			>
-				<label>
-					{{ field.label }}
-				</label>
+				<label> {{ field.label }} {{ selectedTemplate }} </label>
 				<div class="field">
 					<input
 						name="{{ field.code }}"

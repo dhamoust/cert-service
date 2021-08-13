@@ -48,7 +48,7 @@
                 "editable": true,
                 "placeholder": "Recipient Email",
                 "inputType": "text",
-                "required": false,
+                "required": true,
                 "displayProperty": "Editable",
                 "visible": true,
                 "renderingHints": {
@@ -57,15 +57,15 @@
                 "index": 3
             },
             {
-                "code": "recipientRegistrationNumber",
+                "code": "studentRegNo",
                 "dataType": "text",
-                "name": "recipientRegistrationNumber",
+                "name": "studentRegNo",
                 "label": "Recipient Registration Number",
                 "description": "Recipient Registration Number",
                 "editable": true,
                 "placeholder": "Recipient Registration Number",
                 "inputType": "text",
-                "required": false,
+                "required": true,
                 "displayProperty": "Editable",
                 "visible": true,
                 "renderingHints": {
@@ -103,15 +103,15 @@
                 "index": 7
             },
             {
-                "code": "courseLocation",
+                "code": "location",
                 "dataType": "text",
-                "name": "courseLocation",
+                "name": "location",
                 "label": "Course Location",
                 "description": "Course Location",
                 "editable": true,
                 "placeholder": "Course Location",
                 "inputType": "text",
-                "required": false,
+                "required": true,
                 "displayProperty": "Editable",
                 "visible": true,
                 "renderingHints": {
@@ -120,13 +120,13 @@
                 "index": 8
             },
             {
-                "code": "courseGrade",
+                "code": "marks",
                 "dataType": "text",
-                "name": "courseGrade",
-                "label": "Course Grade",
-                "description": "Course Grade",
+                "name": "marks",
+                "label": "Marks",
+                "description": "Marks",
                 "editable": true,
-                "placeholder": "Course Grade",
+                "placeholder": "Required for merit certificate",
                 "inputType": "text",
                 "required": false,
                 "displayProperty": "Editable",
@@ -143,7 +143,7 @@
                 "label": "Certificate Name",
                 "description": "Certificate Name",
                 "editable": true,
-                "placeholder": "Certificate Name",
+                "placeholder": "Participation or Merit",
                 "inputType": "text",
                 "required": true,
                 "displayProperty": "Editable",
@@ -169,23 +169,6 @@
                     "semanticColumnWidth": "four"
                 },
                 "index": 11
-            },
-            {
-                "code": "certificateNumber",
-                "dataType": "text",
-                "name": "certificateNumber",
-                "label": "Certificate Number",
-                "description": "Certificate Number",
-                "editable": true,
-                "placeholder": "Certificate Number",
-                "inputType": "text",
-                "required": false,
-                "displayProperty": "Editable",
-                "visible": true,
-                "renderingHints": {
-                    "semanticColumnWidth": "four"
-                },
-                "index": 12
             },
             {
                 "code": "name",

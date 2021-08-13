@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewChildren, QueryList, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, QueryList, OnChanges, ElementRef } from '@angular/core';
 import { DataService } from '../../services/data/data.service';
 import { ResourceService } from '../../services/resource/resource.service';
 import { FormService } from '../../services/forms/form.service';
@@ -9,6 +9,8 @@ import urlConfig from '../../services/urlConfig.json';
 import { CertReq, Store, Templates } from '../../services/interfaces/certificate';
 import { Router } from '@angular/router';
 import { IEmailCertificate } from 'src/app/services/email-certificate.model';
+import * as $ from 'jquery';
+import moment from 'moment';
 
 @Component({
   selector: 'app-create-certificate',
@@ -16,7 +18,6 @@ import { IEmailCertificate } from 'src/app/services/email-certificate.model';
   styleUrls: ['./create-certificate.component.scss']
 })
 export class CreateCertificateComponent implements OnInit {
-
   @ViewChild('formData') formData: DefaultTemplateComponent;
   @ViewChildren('signatoryForm') signatoryFormData: QueryList<DefaultTemplateComponent>;
   @ViewChild('storageForm') storageFormData: DefaultTemplateComponent;
@@ -26,6 +27,7 @@ export class CreateCertificateComponent implements OnInit {
   resourceService: ResourceService;
   pdfUrl: string;
   public formFieldProperties: any;
+  public selectedTemplate: any;
   public storeFieldProperties: any;
   public signatoryFieldProperties: any;
   public req: CertReq;
@@ -44,6 +46,10 @@ export class CreateCertificateComponent implements OnInit {
   certSelected = [];
   certificateSelected;
   emailCertificateObject: IEmailCertificate;
+  showAllCertToSendEmail = [];
+  sendUserNotificationArray = [];
+  getCertDataToSendEmail = [];
+
   constructor(dataService: DataService, formService: FormService, certificateService: CertificateService, resourceService: ResourceService, router: Router) {
     this.dataService = dataService;
     this.resourceService = resourceService;
@@ -67,13 +73,14 @@ export class CreateCertificateComponent implements OnInit {
     });
   }
 
+
   getTemplates() {
     this.certificateService.getCertificateList().subscribe(res => {
       for (const key in res.result) {
-        if(key.endsWith(`niitMeritHtml`)) {
+        if (key.endsWith(`niitMeritCertificateHtml`)) {
           res.result[key] = `../../assets/certificates/niitMeritHtml.svg`;
         }
-        if(key.endsWith(`niitMeritCertificateHtml`)) {
+        if (key.endsWith(`niitParticipationHtml`)) {
           res.result[key] = `../../assets/certificates/niitParticipationHtml.svg`;
         }
       }
@@ -82,6 +89,7 @@ export class CreateCertificateComponent implements OnInit {
     });
   }
   createCertificate() {
+    this.sendUserNotificationArray = [];
     const certificateData = this.generateData(_.pickBy(this.formData.formInputData));
     const requestData = {
       data: {
@@ -92,8 +100,8 @@ export class CreateCertificateComponent implements OnInit {
       },
       url:
         this.showAllCertsKeys[this.certificateSelected].endsWith('Html')
-          ? urlConfig.URLS.GENERTATE_CERT_HTML
-          : urlConfig.URLS.GENERTATE_CERT_SVG
+          ? urlConfig.URLS.GENERATE_CERT_HTML
+          : urlConfig.URLS.GENERATE_CERT_SVG
     };
     this.dataService.post(requestData).subscribe(res => {
       console.log("RESPONSE", res)
@@ -102,7 +110,7 @@ export class CreateCertificateComponent implements OnInit {
         ? this.pdfUrl = res.result.response[0].jsonData.printUri
         : this.pdfUrl = res.result.response[0].pdfUrl
       // if (this.pdfUrl.startsWith("data")) {
-        window.open(this.pdfUrl);
+      window.open(this.pdfUrl);
       // } else if (this.pdfUrl.startsWith("http")) {
       //   window.open(this.pdfUrl);
       // } else {
@@ -113,9 +121,9 @@ export class CreateCertificateComponent implements OnInit {
         courseName: certificateData.courseName,
         recipientEmail: certificateData.data[0].recipientEmail,
         recipientName: certificateData.data[0].recipientName
-
-      }
-      this.notifyUser(emailnotifier);
+      };
+      this.sendUserNotificationArray.push(emailnotifier);
+      this.notifyUser(this.sendUserNotificationArray);
 
     });
   }
@@ -134,13 +142,14 @@ export class CreateCertificateComponent implements OnInit {
       svgTemplateId: '',
       courseName: '',
       location: '',
-      courseGrade: '',
+      marks: '',
       name: '',
       description: '',
       certificateNum: '',
       studentRegNo: '',
       htmlTemplate: '',
-      svgTemplate: ''
+      svgTemplate: '',
+      recipientEmail: ''
     };
     const data = [{
       recipientName: requestData.recipientName,
@@ -165,12 +174,13 @@ export class CreateCertificateComponent implements OnInit {
     certificate.htmlTemplateId = this.showAllCertsKeys[this.certificateSelected];
     certificate.svgTemplateId = this.showAllCertsKeys[this.certificateSelected];
     certificate.courseName = requestData.courseName;
-    certificate.location = requestData.courseLocation;
-    certificate.courseGrade = requestData.courseGrade;
+    certificate.location = requestData.location;
+    certificate.marks = requestData.marks;
     certificate.name = requestData.certificateName;
     certificate.description = requestData.certificateDescription;
-    certificate.certificateNum = requestData.certificateNumber;
-    certificate.studentRegNo = requestData.recipientRegistrationNumber;
+    certificate.certificateNum = requestData.certificateNum;
+    certificate.studentRegNo = requestData.studentRegNo;
+    certificate.recipientEmail = requestData.recipientEmail;
 
     if (this.preview) {
       certificate['preview'] = "true";
@@ -239,6 +249,64 @@ export class CreateCertificateComponent implements OnInit {
     })
   }
 
+  applyFilter() {
+    var queryData = {
+      "request": {
+        "query": {
+          "bool": {
+            "must": []
+          }
+        }
+      }
+    }
+    queryData.request.query.bool.must.push({
+      "range": {
+        "data.issuedOn": {
+          "gte": moment($("#startDate").val()).format("YYYY-MM-DD"),
+          "lte": moment($("#endDate").val()).format("YYYY-MM-DD")
+        }
+      }
+    });
+
+    this.certificateService.searchCertificate(JSON.stringify(queryData)).subscribe(data => {
+      this.showAllCertToSendEmail = [];
+      let { result: { response: { content: resData } } } = data;
+      console.log(data);
+      resData.forEach(res => {
+        let {
+          _source: {
+            pdfUrl: pdfUrl,
+            data: {
+              recipientEmail: recipientEmail,
+              issuedOn: date,
+              studentRegNo: regNo,
+              certificateNum: certNo,
+              recipient: { name: recipientName },
+              badge: { issuer: { name: issuerName }, name: courseName }
+            }
+          }
+        } = res;
+        this.showAllCertToSendEmail.push({
+          date,
+          certNo,
+          regNo,
+          issuerName,
+          recipientEmail,
+          pdfUrl,
+          recipientName,
+          courseName
+        });
+      });
+      console.log(this.showAllCertToSendEmail);
+    })
+  }
+
+  clearApplyFilter() {
+    $("#startDate").val('');
+    $("#endDate").val('')
+    $("#searchBy").val('');
+    this.showAllCert();
+  }
 
   selectedSvgCert(event) {
     event.stopPropagation();
@@ -265,5 +333,126 @@ export class CreateCertificateComponent implements OnInit {
     }
     console.log(this.certSelected);
     console.log(this.showAllCertsKeys[this.certificateSelected]);
+    this.selectedTemplate = this.showAllCertsKeys[this.certificateSelected].includes('niitMerit');
+    console.log(this.selectedTemplate);
+  }
+
+  showAllCert() {
+    this.showAllCertToSendEmail = [];
+    this.certificateService.searchCertificate({ "request": { "query": { "bool": {} } } }).subscribe(data => {
+      let { result: { response: { content: resData } } } = data;
+      console.log(data);
+      resData.forEach(res => {
+        let {
+          _source: {
+            pdfUrl: pdfUrl,
+            data: {
+              recipientEmail: recipientEmail,
+              issuedOn: date,
+              studentRegNo: regNo,
+              certificateNum: certNo,
+              recipient: { name: recipientName },
+              badge: { issuer: { name: issuerName }, name: courseName }
+            }
+          }
+        } = res;
+        this.showAllCertToSendEmail.push({
+          date,
+          certNo,
+          regNo,
+          issuerName,
+          recipientEmail,
+          pdfUrl,
+          recipientName,
+          courseName
+        });
+      });
+      console.log(this.showAllCertToSendEmail);
+    })
+  }
+
+  sendMultipleNotifications() {
+    this.sendUserNotificationArray = [];
+    let getParentNode = document.getElementById("certTable"),
+      checkPdfUrl,
+      findCheckBoxes = getParentNode.getElementsByTagName("input");
+
+    for (var i = 0; i < findCheckBoxes.length; i++) {
+      if (findCheckBoxes[i].checked) {
+        $(findCheckBoxes[i]).data("url") === undefined
+      || $(findCheckBoxes[i]).data("url") === null ? checkPdfUrl = ""
+      : checkPdfUrl = $(findCheckBoxes[i]).data("url");
+
+    console.log("checkPdfUrl", checkPdfUrl);
+        console.log($(findCheckBoxes[i]).data("email"));
+        this.sendUserNotificationArray.push({
+          pdfUrl: checkPdfUrl,
+          courseName: $(findCheckBoxes[i]).data("course"),
+          recipientEmail: $(findCheckBoxes[i]).data("email"),
+          recipientName: $(findCheckBoxes[i]).data("name"),
+        });
+      }
+    }
+    this.notifyUser(this.sendUserNotificationArray.filter((item, index) => this.sendUserNotificationArray.indexOf(item) === index));
+  }
+
+  searchByFilter() {
+    const searchData = $("#searchBy").val();
+    searchData.toLowerCase();
+    let queryData = {
+      "request": {
+        "query": {
+          "bool": {
+            "must": []
+          }
+        }
+      }
+    }
+    if (searchData.startsWith("R")) {
+      queryData.request.query.bool.must.push(
+        { "match": { "data.studentRegNo": searchData } },
+      );
+    } else if (searchData.startsWith("C")) {
+      queryData.request.query.bool.must.push(
+        { "match": { "data.certificateNum": searchData } }
+      );
+    } else {
+      queryData.request.query.bool.must.push(
+        { "match": { "data.badge.issuer.name": searchData } },
+
+      );
+    }
+    console.log(queryData);
+    this.certificateService.searchCertificate(JSON.stringify(queryData)).subscribe(data => {
+      this.showAllCertToSendEmail = [];
+      let { result: { response: { content: resData } } } = data;
+      console.log(data);
+      resData.forEach(res => {
+        let {
+          _source: {
+            pdfUrl: pdfUrl,
+            data: {
+              recipientEmail: recipientEmail,
+              issuedOn: date,
+              studentRegNo: regNo,
+              certificateNum: certNo,
+              recipient: { name: recipientName },
+              badge: { issuer: { name: issuerName }, name: courseName }
+            }
+          }
+        } = res;
+        this.showAllCertToSendEmail.push({
+          date,
+          certNo,
+          regNo,
+          issuerName,
+          recipientEmail,
+          pdfUrl,
+          recipientName,
+          courseName
+        });
+      });
+      console.log(this.showAllCertToSendEmail);
+    });
   }
 }

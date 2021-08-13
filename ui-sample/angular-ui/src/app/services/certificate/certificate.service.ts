@@ -12,7 +12,7 @@ import { IEmailCertificate } from '../email-certificate.model';
 export class CertificateService {
   http: HttpClient;
   baseUrl: string;
-
+  searchArray = ['tanya', 'raju', 'rishabh', 'vijay']
   constructor(http: HttpClient) {
     this.http = http;
     this.baseUrl = urlConfig.URLS.BASE_URL;
@@ -35,6 +35,18 @@ export class CertificateService {
     const headers = { 'content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     const requestBody = emailCertificate;
     console.log("requestBody", requestBody)
-    return this.http.post(`http://localhost:9000/user/email`, requestBody, { 'headers': headers })
+    return this.http.post(`${urlConfig.URLS.BASE_URL}${urlConfig.URLS.EMAIL_NOTIFICATION}`, requestBody, { 'headers': headers })
+  }
+
+  public searchCertificate(queryInput): Observable<any> {
+    const requestBody = queryInput;
+    const headers = { 'content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    return this.http.post(`${urlConfig.URLS.SEARCH_CERT}`, requestBody, { headers } )
+  }
+
+  public displayCertificate(queryInput): Observable<any> {
+    const requestBody = queryInput;
+    const headers = { 'content-type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+    return this.http.post(`${urlConfig.URLS.DISPLAY_CERT}`, requestBody, { headers } )
   }
 }

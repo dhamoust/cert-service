@@ -1,14 +1,17 @@
 {
-    "URLS": {
-        "BASE_URL": "http://localhost:9000",
-        "SEARCH": "/search",
-        "READ": "/read",
-        "ADD": "/add",
-        "UPDATE": "/update",
-        "GENERTATE_CERT_HTML": "/v1/certs/generate",
-        "GENERTATE_CERT_SVG": "/v2/certs/generate",
-        "DOWLOAD_PDF": "/v1/user/certs/download",
-        "SHOW_CERT": "/templates/svg"
-    },
-    "PAGE_LIMIT": 20
+	"URLS": {
+		"BASE_URL": "http://localhost:9000",
+		"SEARCH": "/search",
+		"READ": "/read",
+		"ADD": "/add",
+		"UPDATE": "/update",
+		"GENERATE_CERT_HTML": "/v1/certs/generate",
+		"GENERATE_CERT_SVG": "/v2/certs/generate",
+		"DOWLOAD_PDF": "/v1/user/certs/download",
+		"SHOW_CERT": "/templates/svg",
+		"EMAIL_NOTIFICATION": "/user/email",
+		"DISPLAY_CERT": "http://localhost:9010/certs/v1/registry/search",
+		"SEARCH_CERT": "http://localhost:9010/certs/v1/registry/search"
+	},
+	"PAGE_LIMIT": 20
 }
