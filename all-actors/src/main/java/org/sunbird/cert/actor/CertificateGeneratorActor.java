@@ -126,13 +126,9 @@ public class CertificateGeneratorActor extends BaseActor {
         String reqMarks = properties.get(JsonKey.MARKS);
         if (reqMarks != null) {
             double marks = Double.parseDouble(properties.get(JsonKey.MARKS));
-//        if (marks >= 60 && marks < 70) properties.put(JsonKey.IMPLICATION, "Good");
-//        else if (marks >= 70 && marks < 80) properties.put(JsonKey.IMPLICATION, "Very Good");
-//        else if (marks >= 80 && marks < 90) properties.put(JsonKey.IMPLICATION, "Excellent");
-//        else if (marks >= 90 && marks <= 100) properties.put(JsonKey.IMPLICATION, "Outstanding");
-//        else properties.put(JsonKey.IMPLICATION,"failed");
             logger.info(request.getRequestContext(), "Marks value ====== {}", marks);
-            Object obj = new JSONParser().parse(new FileReader("/Users/apple/Sunbird-Stackroute/cert-service/service/conf/grade_management.json"));
+            String filePath = new File("").getAbsolutePath();
+            Object obj = new JSONParser().parse(new FileReader(filePath + JsonKey.GRADE_MANAGEMENT_PDF));
             logger.info(request.getRequestContext(), "Parsed value ====== {}", obj);
 
             // typecasting obj to JSONObject
@@ -170,16 +166,11 @@ public class CertificateGeneratorActor extends BaseActor {
                 certificateResponse = new CertificateResponseV1(uuid, accessCode, certModel.getIdentifier(), convertStringToMap(jsonData), properties.get(JsonKey.BASE_PATH).concat(pdfLink));
                 Map<String, Object> uploadRes = uploadJson(directory + uuid, certStore, certStoreFactory.setCloudPath(storeParams));
                 certificateResponse.setJsonUrl(properties.get(JsonKey.BASE_PATH).concat((String) uploadRes.get(JsonKey.JSON_URL)));
-//                Producer<Long, Object> producer = PdfGenerator.createProducer();
-//                ProducerRecord prodRecord = new ProducerRecord("sunbirddev.generate.certificate.request", certificateResponse.toString());
-//                producer.send(prodRecord);
-//                producer.close();
                 String apiToCall = CERT_REGISTRY_SERVICE + REGISTRY_PDF_URL;
                 Map<String, Object> req = new HashMap<>();
                 req.put(JsonKey.REQUEST, certificateResponse);
                 String requestBody = requestMapper.writeValueAsString(req);
                 CertRegistryAsyncService.makeAsyncPostCall(apiToCall, requestBody, headerMap);
-//                PdfGenerator.syncCertRegistry(certificateResponse, apiToCall);
                 certUrlList.add(mapper.convertValue(certificateResponse, new TypeReference<Map<String, Object>>() {
                 }));
             } catch (Exception ex) {
@@ -207,13 +198,9 @@ public class CertificateGeneratorActor extends BaseActor {
         String reqMarks = properties.get(JsonKey.MARKS);
         if (reqMarks != null) {
             double marks = Double.parseDouble(properties.get(JsonKey.MARKS));
-//        if (marks >= 60 && marks < 70) properties.put(JsonKey.IMPLICATION, "Good");
-//        else if (marks >= 70 && marks < 80) properties.put(JsonKey.IMPLICATION, "Very Good");
-//        else if (marks >= 80 && marks < 90) properties.put(JsonKey.IMPLICATION, "Excellent");
-//        else if (marks >= 90 && marks <= 100) properties.put(JsonKey.IMPLICATION, "Outstanding");
-//        else properties.put(JsonKey.IMPLICATION,"failed");
             logger.info(request.getRequestContext(), "Marks value ====== {}", marks);
-            Object obj = new JSONParser().parse(new FileReader("/Users/apple/Sunbird-Stackroute/cert-service/service/conf/niitMeritSvg.json"));
+            String filePath = new File("").getAbsolutePath();
+            Object obj = new JSONParser().parse(new FileReader(filePath + JsonKey.GRADE_MANAGEMENT_SVG));
             logger.info(request.getRequestContext(), "Parsed value ====== {}", obj);
 
             // typecasting obj to JSONObject

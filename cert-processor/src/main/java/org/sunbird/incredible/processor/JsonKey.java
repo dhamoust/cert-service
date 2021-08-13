@@ -127,6 +127,8 @@ public interface JsonKey {
     String INTERPRETITION = "interpretation";
     String LOWER_LIMIT = "lowerLimit";
     String UPPER_LIMIT = "upperLimit";
+    String GRADE_MANAGEMENT_PDF = "/conf/grade_management_pdf.json";
+    String GRADE_MANAGEMENT_SVG = "/conf/grade_management_svg.json";
     String REQ_ID = "reqId";
     String REQUEST_MESSAGE_ID = "msgId";
     String X_REQUEST_ID = "X-Request-ID";
