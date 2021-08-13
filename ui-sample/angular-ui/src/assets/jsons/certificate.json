@@ -111,7 +111,7 @@
                 "editable": true,
                 "placeholder": "Course Location",
                 "inputType": "text",
-                "required": false,
+                "required": true,
                 "displayProperty": "Editable",
                 "visible": true,
                 "renderingHints": {
@@ -169,23 +169,6 @@
                     "semanticColumnWidth": "four"
                 },
                 "index": 11
-            },
-            {
-                "code": "certificateNum",
-                "dataType": "text",
-                "name": "certificateNum",
-                "label": "Certificate Number",
-                "description": "Certificate Number",
-                "editable": true,
-                "placeholder": "Certificate Number",
-                "inputType": "text",
-                "required": true,
-                "displayProperty": "Editable",
-                "visible": true,
-                "renderingHints": {
-                    "semanticColumnWidth": "four"
-                },
-                "index": 12
             },
             {
                 "code": "name",

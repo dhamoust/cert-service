@@ -89,6 +89,7 @@ export class CreateCertificateComponent implements OnInit {
     });
   }
   createCertificate() {
+    this.sendUserNotificationArray = [];
     const certificateData = this.generateData(_.pickBy(this.formData.formInputData));
     const requestData = {
       data: {
@@ -147,7 +148,8 @@ export class CreateCertificateComponent implements OnInit {
       certificateNum: '',
       studentRegNo: '',
       htmlTemplate: '',
-      svgTemplate: ''
+      svgTemplate: '',
+      recipientEmail: ''
     };
     const data = [{
       recipientName: requestData.recipientName,
@@ -178,6 +180,7 @@ export class CreateCertificateComponent implements OnInit {
     certificate.description = requestData.certificateDescription;
     certificate.certificateNum = requestData.certificateNum;
     certificate.studentRegNo = requestData.studentRegNo;
+    certificate.recipientEmail = requestData.recipientEmail;
 
     if (this.preview) {
       certificate['preview'] = "true";
@@ -371,13 +374,19 @@ export class CreateCertificateComponent implements OnInit {
   sendMultipleNotifications() {
     this.sendUserNotificationArray = [];
     let getParentNode = document.getElementById("certTable"),
+      checkPdfUrl,
       findCheckBoxes = getParentNode.getElementsByTagName("input");
 
     for (var i = 0; i < findCheckBoxes.length; i++) {
       if (findCheckBoxes[i].checked) {
+        $(findCheckBoxes[i]).data("url") === undefined
+      || $(findCheckBoxes[i]).data("url") === null ? checkPdfUrl = ""
+      : checkPdfUrl = $(findCheckBoxes[i]).data("url");
+
+    console.log("checkPdfUrl", checkPdfUrl);
         console.log($(findCheckBoxes[i]).data("email"));
         this.sendUserNotificationArray.push({
-          pdfUrl: $(findCheckBoxes[i]).data("url"),
+          pdfUrl: checkPdfUrl,
           courseName: $(findCheckBoxes[i]).data("course"),
           recipientEmail: $(findCheckBoxes[i]).data("email"),
           recipientName: $(findCheckBoxes[i]).data("name"),
