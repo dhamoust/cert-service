@@ -42,6 +42,7 @@ import org.sunbird.common.Platform;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -56,6 +57,7 @@ public class ElasticSearchUtil {
 	}
 
 	private static Map<String, RestHighLevelClient> esClient = new HashMap<String, RestHighLevelClient>();
+	private static AtomicInteger atomicInteger = new AtomicInteger();
 
 	public static int defaultResultLimit = 10000;
 	private static final int resultLimit = 100;
@@ -421,10 +423,11 @@ public class ElasticSearchUtil {
 			public void onResponse(IndexResponse indexResponse) {*/
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("niitParticipationSvg","https://sunbird1dev1private.blob.core.windows.net/reports/print-service/niitParticipation.svg");
-		map.put("niitMeritSvg", "https://sunbird1dev1private.blob.core.windows.net/reports/print-service/meritCertificate.svg");
+		map.put("niitParticipationSvg","https://sunbird1dev1public.blob.core.windows.net/public/print-service/niitParticipation.svg");
+		map.put("niitMeritSvg", "https://sunbird1dev1public.blob.core.windows.net/public/print-service/meritCertificate.svg");
 		map.put("niitMeritCertificateHtml","https://sunbird1dev1public.blob.core.windows.net/public/print-service/RishabCertificate.zip");
 		map.put("niitMeritHtml","https://sunbird1dev1public.blob.core.windows.net/public/print-service/niitMeritHtml.zip");
+		map.put("niitParticipationHtml","https://sunbird1dev1public.blob.core.windows.net/public/print-service/NiitParticipationHTML.zip");
 		future.complete(map);
 				/*	put("identifier", indexResponse.getId());
 				}});
@@ -478,4 +481,12 @@ public class ElasticSearchUtil {
 	}
 
 
+	public static String getUniqueIdFromTimestamp(int environmentId) {
+
+		Random random = new Random();
+		long env = (environmentId + random.nextInt(99999)) / 10000000;
+		long uid = System.currentTimeMillis() + random.nextInt(999999);
+		uid = uid << 13;
+		return env + "" + uid + "" + atomicInteger.getAndIncrement();
+	}
 }

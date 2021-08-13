@@ -56,6 +56,7 @@ public class CertsGenerationController  extends BaseController{
 					String templateId = (String) certReq.get(JsonKey.HTML_TEMPLATE_ID);
 					String url = (String) ((HashMap) ElasticSearchUtil.getTemplates().get()).get(templateId);
 					certReq.put(JsonKey.HTML_TEMPLATE, url);
+					certReq.put(JsonKey.CERTIFICATE_NUM, JsonKey.CERT_PREFIX + ElasticSearchUtil.getUniqueIdFromTimestamp(0));
 					logger.info("=============" + req);
 					context.put(JsonKey.LOCATION,certReq.get(JsonKey.LOCATION));
 					req.setContext(context);
@@ -77,6 +78,7 @@ public class CertsGenerationController  extends BaseController{
 					String templateId = (String) certReq.get(JsonKey.SVG_TEMPLATE_ID);
 					String url = (String) ((HashMap) ElasticSearchUtil.getTemplates().get()).get(templateId);
 					certReq.put(JsonKey.SVG_TEMPLATE, url);
+					certReq.put(JsonKey.CERTIFICATE_NUM, JsonKey.CERT_PREFIX + ElasticSearchUtil.getUniqueIdFromTimestamp(0));
 					logger.info("=============" + req);
 					context.put(JsonKey.LOCATION,certReq.get(JsonKey.LOCATION));
 					req.setContext(context);

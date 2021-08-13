@@ -121,6 +121,7 @@ public interface JsonKey {
     String LOCATION = "location";
     String STUDENT_REG_NUM = "studentRegNo";
     String CERTIFICATE_NUM = "certificateNum";
+    String CERT_PREFIX = "C";
     String MARKS = "marks";
     String IMPLICATION = "implication";
     String INTERPRETITION = "interpretation";
