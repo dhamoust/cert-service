@@ -107,7 +107,7 @@ export class CreateCertificateComponent implements OnInit {
       console.log("RESPONSE", res)
       console.log('certificate generated successfully', res);
       this.showAllCertsKeys[this.certificateSelected].endsWith('Svg')
-        ? this.pdfUrl = res.result.response[0].jsonData.printUri
+        ? this.pdfUrl = ''
         : this.pdfUrl = res.result.response[0].pdfUrl
       // if (this.pdfUrl.startsWith("data")) {
       window.open(this.pdfUrl);
@@ -120,7 +120,8 @@ export class CreateCertificateComponent implements OnInit {
         pdfUrl: this.pdfUrl,
         courseName: certificateData.courseName,
         recipientEmail: certificateData.data[0].recipientEmail,
-        recipientName: certificateData.data[0].recipientName
+        recipientName: certificateData.data[0].recipientName,
+        svgUrl: res.result.response[0].svgUrl
       };
       this.sendUserNotificationArray.push(emailnotifier);
       this.notifyUser(this.sendUserNotificationArray);
@@ -375,21 +376,34 @@ export class CreateCertificateComponent implements OnInit {
     this.sendUserNotificationArray = [];
     let getParentNode = document.getElementById("certTable"),
       checkPdfUrl,
+      checkSvgUrl,
       findCheckBoxes = getParentNode.getElementsByTagName("input");
+
+      // this.showAllCertsKeys[this.certificateSelected].endsWith('Svg')
+      //   ? this.pdfUrl = ''
+      //   : this.pdfUrl = res.result.response[0].pdfUrl
 
     for (var i = 0; i < findCheckBoxes.length; i++) {
       if (findCheckBoxes[i].checked) {
-        $(findCheckBoxes[i]).data("url") === undefined
-      || $(findCheckBoxes[i]).data("url") === null ? checkPdfUrl = ""
-      : checkPdfUrl = $(findCheckBoxes[i]).data("url");
+        $(findCheckBoxes[i]).data("url") === undefined || $(findCheckBoxes[i]).data("url") === null
+          ? checkPdfUrl = ""
+          : checkPdfUrl = $(findCheckBoxes[i]).data("url");
 
-    console.log("checkPdfUrl", checkPdfUrl);
+        $(findCheckBoxes[i]).data("svgUrl") === undefined || $(findCheckBoxes[i]).data("svgUrl") === null
+          ? checkSvgUrl = ""
+          : checkSvgUrl = $(findCheckBoxes[i]).data("svgUrl");
+
+        console.log("checkPdfUrl", checkPdfUrl);
+        console.log($(findCheckBoxes[i]).data("course"));
         console.log($(findCheckBoxes[i]).data("email"));
+        console.log($(findCheckBoxes[i]).data("name"));
+        console.log($(findCheckBoxes[i]).data("svgUrl"));
         this.sendUserNotificationArray.push({
           pdfUrl: checkPdfUrl,
           courseName: $(findCheckBoxes[i]).data("course"),
           recipientEmail: $(findCheckBoxes[i]).data("email"),
           recipientName: $(findCheckBoxes[i]).data("name"),
+          svgUrl: $(findCheckBoxes[i]).data("svgUrl")
         });
       }
     }
