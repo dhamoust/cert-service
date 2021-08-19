@@ -239,7 +239,9 @@ public class CertificateGeneratorActor extends BaseActor {
                 String svgUrl = uploadSvg(decodedSvg, uuid, certStore, certStoreFactory.setCloudPath(storeParams));
                 CertificateResponse certificateResponse = new CertificateResponse(certificateGenerator.getUUID(certificateExtension), (String) qrMap.get(JsonKey.ACCESS_CODE), certModel.getIdentifier(), mapper.convertValue(certificateExtension, Map.class));
                 certificateResponse.setJsonUrl(properties.get(JsonKey.BASE_PATH).concat(jsonUrl));
-                certificateResponse.setSvgUrl(properties.get(JsonKey.BASE_PATH).concat(svgUrl));
+//                certificateResponse.setSvgUrl(properties.get(JsonKey.BASE_PATH).concat(svgUrl));
+                String svgDomainUrl = "https://sunbird1dev1private.blob.core.windows.net/reports";
+                certificateResponse.setSvgUrl(svgDomainUrl.concat(svgUrl));
                 String apiToCall = CERT_REGISTRY_SERVICE + REGISTRY_SVG_URL;
                 Map<String, Object> req = new HashMap<>();
                 req.put(JsonKey.REQUEST, certificateResponse);
