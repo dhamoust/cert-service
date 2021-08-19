@@ -441,19 +441,20 @@ public class ElasticSearchUtil {
 	}
 
 
-	public static CompletableFuture sendGridEmail(List<String> pdfUrl, List<String> recipientId, List<String> recipientName, List<String> courseName) throws Exception {
+	public static CompletableFuture sendGridEmail(List<String> pdfOrSvg, List<String> recipientId, List<String> recipientName, List<String> courseName) throws Exception {
 		CompletableFuture future = new CompletableFuture();
 		Request request = new Request();
-		Mail mail = null;
-		SendGrid sg = null;
+		Mail mail;
+		SendGrid sg;
 		com.sendgrid.Response response = null;
 		Email from = new Email("");
 		from.setName("StackRoute Certification Service");
-		for(String recipients: recipientId) {
+		int index = 0;
+		for (String recipients : recipientId) {
 			Email to = new Email(recipients);
 			String subject = "Download your certificate here";
-			int index = recipientId.indexOf(recipients);
-			String body = "Dear " + recipientName.get(index) + ",<br/></br>" + "\n" + "<p>Congratulations, you have successfully completed a course titled : " + "\n" + courseName.get(index) + "\n" + ".</p> </br></br>" + "<p> You can download your certificate by following below link.</p>" + "\n" + "</br></br>" + pdfUrl.get(index) + "\n" + "<p></br></br>" + "Sincere Regards,</p>" + "<p></br>" + "NIIT Ltd</p>";
+//			int index = recipientId.indexOf(recipients);
+			String body = "Dear " + recipientName.get(index) + ",<br/></br>" + "\n" + "<p>Congratulations, you have successfully completed a course titled : " + "\n" + courseName.get(index) + "\n" + ".</p> </br></br>" + "<p> You can download your certificate by following below link.</p>" + "\n" + "</br></br>" + pdfOrSvg.get(index) + "\n" + "<p></br></br>" + "Sincere Regards,</p>" + "<p></br>" + "NIIT Ltd</p>";
 			Content content = new Content("text/html", body);
 			sg = new SendGrid("");
 			mail = new Mail(from, subject, to, content);
@@ -461,17 +462,10 @@ public class ElasticSearchUtil {
 			request.setEndpoint("mail/send");
 			request.setBody(mail.build());
 			response = sg.api(request);
-
-		}
-
-
-
-
-		System.out.println(response.getStatusCode());
-		System.out.println(response.getHeaders());
-		System.out.println(response.getBody());
-		if (response.getStatusCode() != 202) {
-			throw new Exception(response.getBody());
+			if (response.getStatusCode() != 202) {
+				throw new Exception(response.getBody());
+			}
+			index++;
 		}
 		Map res = new HashMap();
 		res.put("statusCode", response.getStatusCode());

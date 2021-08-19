@@ -98,6 +98,7 @@ public class CertificateGenerator {
         qrCodeGenerationModel.setText(accessCode);
         qrCodeGenerationModel.setFileName(directory + getUUID(certificateExtension));
         qrCodeGenerationModel.setData(properties.get(JsonKey.BASE_PATH).concat("/") + getUUID(certificateExtension));
+//        qrCodeGenerationModel.setData("http://localhost:4200/certs/" + getUUID(certificateExtension));
         QRCodeImageGenerator qrCodeImageGenerator = new QRCodeImageGenerator();
         File qrCodeFile = qrCodeImageGenerator.createQRImages(qrCodeGenerationModel);
 

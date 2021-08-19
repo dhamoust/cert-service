@@ -25,6 +25,7 @@ public class SvgGenerator {
     private String svgTemplate;
     private String directory;
     private static Map<String, String> encoderMap = new HashMap<>();
+    private static Map<String, String> decoderMap = new HashMap<>();
     private static Map<String, String> cachedSvgTemplates = new HashMap<>();
 
 
@@ -34,6 +35,15 @@ public class SvgGenerator {
         encoderMap.put("#", "%23");
         encoderMap.put("%", "%25");
         encoderMap.put("\"", "\'");
+    }
+
+    static{
+        decoderMap.put("%3C","<");
+        decoderMap.put("%3E",">");
+        decoderMap.put("%23","#");
+        decoderMap.put("%25","%");
+        decoderMap.put("%20"," ");
+        decoderMap.put("%2C",",");
     }
 
     public SvgGenerator(String svgTemplate, String directory) {
@@ -79,6 +89,17 @@ public class SvgGenerator {
         Matcher matcher = pattern.matcher(data);
         while (matcher.find()) {
             matcher.appendReplacement(stringBuffer, encoderMap.get(matcher.group()));
+        }
+        matcher.appendTail(stringBuffer);
+        return stringBuffer.toString();
+    }
+
+    public String decodeData(String data) {
+        StringBuffer stringBuffer = new StringBuffer();
+        Pattern pattern = Pattern.compile("%3C|%3E|%23|%25|%20|%2C");
+        Matcher matcher = pattern.matcher(data);
+        while (matcher.find()) {
+            matcher.appendReplacement(stringBuffer, decoderMap.get(matcher.group()));
         }
         matcher.appendTail(stringBuffer);
         return stringBuffer.toString();

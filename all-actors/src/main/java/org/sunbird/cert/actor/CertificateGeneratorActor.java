@@ -7,8 +7,6 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -37,6 +35,9 @@ import scala.Some;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -233,17 +234,17 @@ public class CertificateGeneratorActor extends BaseActor {
                 SvgGenerator svgGenerator = new SvgGenerator((String) ((Map) request.get(JsonKey.CERTIFICATE)).get(JsonKey.SVG_TEMPLATE), directory);
                 String encodedSvg = svgGenerator.generate(certificateExtension, encodedQrCode);
                 certificateExtension.setPrintUri(encodedSvg);
-//                String svgUrl = uploadSvg(encodedSvg, uuid, certStore, certStoreFactory.setCloudPath(storeParams));
                 String jsonUrl = uploadJson(certificateExtension, uuid , certStore, certStoreFactory.setCloudPath(storeParams));
+                String decodedSvg = svgGenerator.decodeData(encodedSvg);
+                String svgUrl = uploadSvg(decodedSvg, uuid, certStore, certStoreFactory.setCloudPath(storeParams));
                 CertificateResponse certificateResponse = new CertificateResponse(certificateGenerator.getUUID(certificateExtension), (String) qrMap.get(JsonKey.ACCESS_CODE), certModel.getIdentifier(), mapper.convertValue(certificateExtension, Map.class));
                 certificateResponse.setJsonUrl(properties.get(JsonKey.BASE_PATH).concat(jsonUrl));
-//                certificateResponse.setSvgUrl(properties.get(JsonKey.BASE_PATH).concat(svgUrl));
+                certificateResponse.setSvgUrl(properties.get(JsonKey.BASE_PATH).concat(svgUrl));
                 String apiToCall = CERT_REGISTRY_SERVICE + REGISTRY_SVG_URL;
                 Map<String, Object> req = new HashMap<>();
                 req.put(JsonKey.REQUEST, certificateResponse);
                 String requestBody = requestMapper.writeValueAsString(req);
                 CertRegistryAsyncService.makeAsyncPostCall(apiToCall, requestBody, headerMap);
-//                PdfGenerator.syncSvgCertRegistry(certificateResponse, apiToCall);
                 certUrlList.add(mapper.convertValue(certificateResponse, new TypeReference<Map<String, Object>>() {
                 }));
             } catch (Exception ex) {
@@ -307,10 +308,30 @@ public class CertificateGeneratorActor extends BaseActor {
         return resMap;
     }
 
-    private String uploadSvg(String encodedSvg, String uuid, ICertStore certStore, String cloudPath) throws IOException {
-        logger.info(null, "uploadJson: uploading json file started {}", uuid);
+    private String uploadSvg(String decodedSvg, String uuid, ICertStore certStore, String cloudPath) throws IOException {
+        logger.info(null, "uploadSvg: uploading svg file started {}", uuid);
         File file = new File(directory + uuid + ".svg");
-        mapper.writeValue(file, encodedSvg);
+        boolean ifSuccess;
+        try
+        {
+            ifSuccess = file.createNewFile();
+            if(ifSuccess)
+            {
+                System.out.println("file created.");
+                Path path = Paths.get(file.getCanonicalPath());
+                Files.write(path, Collections.singleton(decodedSvg.substring(19)));
+            }
+            else
+            {
+                System.out.println("File already exist at location: "+file.getCanonicalPath());
+                Path path = Paths.get(file.getCanonicalPath());
+                Files.write(path, Collections.singleton(decodedSvg.substring(19)));
+            }
+
+        }catch (IOException e)
+        {
+            e.printStackTrace();
+        }
         return certStore.save(file, cloudPath);
     }
 
