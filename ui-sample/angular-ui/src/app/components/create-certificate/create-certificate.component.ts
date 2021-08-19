@@ -49,7 +49,7 @@ export class CreateCertificateComponent implements OnInit {
   showAllCertToSendEmail = [];
   sendUserNotificationArray = [];
   getCertDataToSendEmail = [];
-
+  svgUrl: string;
   constructor(dataService: DataService, formService: FormService, certificateService: CertificateService, resourceService: ResourceService, router: Router) {
     this.dataService = dataService;
     this.resourceService = resourceService;
@@ -106,11 +106,13 @@ export class CreateCertificateComponent implements OnInit {
     this.dataService.post(requestData).subscribe(res => {
       console.log("RESPONSE", res)
       console.log('certificate generated successfully', res);
-      this.showAllCertsKeys[this.certificateSelected].endsWith('Svg')
-        ? this.pdfUrl = ''
-        : this.pdfUrl = res.result.response[0].pdfUrl
+      // this.showAllCertsKeys[this.certificateSelected].endsWith('Svg')
+      //   ? this.pdfUrl = ''
+      //   : this.pdfUrl = res.result.response[0].pdfUrl
+      this.showAllCertsKeys[this.certificateSelected].endsWith('Html')
+        ? (this.pdfUrl = res.result.response[0].pdfUrl, this.svgUrl ='', window.open(this.pdfUrl)        )
+        : (this.pdfUrl = '', this.svgUrl = res.result.response[0].svgUrl, window.open(this.svgUrl)        )
       // if (this.pdfUrl.startsWith("data")) {
-      window.open(this.pdfUrl);
       // } else if (this.pdfUrl.startsWith("http")) {
       //   window.open(this.pdfUrl);
       // } else {
@@ -121,7 +123,7 @@ export class CreateCertificateComponent implements OnInit {
         courseName: certificateData.courseName,
         recipientEmail: certificateData.data[0].recipientEmail,
         recipientName: certificateData.data[0].recipientName,
-        svgUrl: res.result.response[0].svgUrl
+        svgUrl: this.svgUrl
       };
       this.sendUserNotificationArray.push(emailnotifier);
       this.notifyUser(this.sendUserNotificationArray);
@@ -277,6 +279,7 @@ export class CreateCertificateComponent implements OnInit {
         let {
           _source: {
             pdfUrl: pdfUrl,
+            svgUrl: svgUrl,
             data: {
               recipientEmail: recipientEmail,
               issuedOn: date,
@@ -294,6 +297,7 @@ export class CreateCertificateComponent implements OnInit {
           issuerName,
           recipientEmail,
           pdfUrl,
+          svgUrl,
           recipientName,
           courseName
         });
@@ -347,6 +351,7 @@ export class CreateCertificateComponent implements OnInit {
         let {
           _source: {
             pdfUrl: pdfUrl,
+            svgUrl: svgUrl,
             data: {
               recipientEmail: recipientEmail,
               issuedOn: date,
@@ -364,6 +369,7 @@ export class CreateCertificateComponent implements OnInit {
           issuerName,
           recipientEmail,
           pdfUrl,
+          svgUrl,
           recipientName,
           courseName
         });
@@ -389,9 +395,9 @@ export class CreateCertificateComponent implements OnInit {
           ? checkPdfUrl = ""
           : checkPdfUrl = $(findCheckBoxes[i]).data("url");
 
-        $(findCheckBoxes[i]).data("svgUrl") === undefined || $(findCheckBoxes[i]).data("svgUrl") === null
+        $(findCheckBoxes[i]).data("svgurl") === undefined || $(findCheckBoxes[i]).data("svgurl") === null
           ? checkSvgUrl = ""
-          : checkSvgUrl = $(findCheckBoxes[i]).data("svgUrl");
+          : checkSvgUrl = $(findCheckBoxes[i]).data("svgurl");
 
         console.log("checkPdfUrl", checkPdfUrl);
         console.log($(findCheckBoxes[i]).data("course"));
@@ -403,7 +409,7 @@ export class CreateCertificateComponent implements OnInit {
           courseName: $(findCheckBoxes[i]).data("course"),
           recipientEmail: $(findCheckBoxes[i]).data("email"),
           recipientName: $(findCheckBoxes[i]).data("name"),
-          svgUrl: $(findCheckBoxes[i]).data("svgUrl")
+          svgUrl: checkSvgUrl
         });
       }
     }
