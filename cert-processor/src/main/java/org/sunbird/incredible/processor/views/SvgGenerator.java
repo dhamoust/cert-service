@@ -44,6 +44,7 @@ public class SvgGenerator {
         decoderMap.put("%25","%");
         decoderMap.put("%20"," ");
         decoderMap.put("%2C",",");
+        decoderMap.put("%3A",":");
     }
 
     public SvgGenerator(String svgTemplate, String directory) {
@@ -96,7 +97,7 @@ public class SvgGenerator {
 
     public String decodeData(String data) {
         StringBuffer stringBuffer = new StringBuffer();
-        Pattern pattern = Pattern.compile("%3C|%3E|%23|%25|%20|%2C");
+        Pattern pattern = Pattern.compile("%3C|%3E|%23|%25|%20|%2C|%3A");
         Matcher matcher = pattern.matcher(data);
         while (matcher.find()) {
             matcher.appendReplacement(stringBuffer, decoderMap.get(matcher.group()));

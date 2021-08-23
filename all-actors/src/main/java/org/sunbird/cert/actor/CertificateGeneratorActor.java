@@ -126,22 +126,7 @@ public class CertificateGeneratorActor extends BaseActor {
         logger.info(request.getRequestContext(), "Properties ====== {}", properties);
         String reqMarks = properties.get(JsonKey.MARKS);
         if (reqMarks != null) {
-            double marks = Double.parseDouble(properties.get(JsonKey.MARKS));
-            logger.info(request.getRequestContext(), "Marks value ====== {}", marks);
-            String filePath = new File("").getAbsolutePath();
-            Object obj = new JSONParser().parse(new FileReader(filePath + JsonKey.GRADE_MANAGEMENT_PDF));
-            logger.info(request.getRequestContext(), "Parsed value ====== {}", obj);
-
-            // typecasting obj to JSONObject
-            JSONObject jo = (JSONObject) obj;
-            List<Map<String, Object>> range = ((List<Map<String, Object>>) jo.get("niitMeritCertificateHtml"));
-            for (Map<String, Object> map : range) {
-                double lowerLimit = Double.parseDouble((String) map.get(JsonKey.LOWER_LIMIT));
-                double upperLimit = Double.parseDouble((String) map.get(JsonKey.UPPER_LIMIT));
-                if (marks >= lowerLimit && marks <= upperLimit) {
-                    properties.put(JsonKey.IMPLICATION, (String) map.get(JsonKey.INTERPRETITION));
-                }
-            }
+            properties.put(JsonKey.IMPLICATION, marksToImplication(reqMarks));
         } else {
             StringUtils.isNotBlank(reqMarks);
         }
@@ -198,22 +183,7 @@ public class CertificateGeneratorActor extends BaseActor {
         logger.info(request.getRequestContext(), "Properties ====== {}", properties);
         String reqMarks = properties.get(JsonKey.MARKS);
         if (reqMarks != null) {
-            double marks = Double.parseDouble(properties.get(JsonKey.MARKS));
-            logger.info(request.getRequestContext(), "Marks value ====== {}", marks);
-            String filePath = new File("").getAbsolutePath();
-            Object obj = new JSONParser().parse(new FileReader(filePath + JsonKey.GRADE_MANAGEMENT_SVG));
-            logger.info(request.getRequestContext(), "Parsed value ====== {}", obj);
-
-            // typecasting obj to JSONObject
-            JSONObject jo = (JSONObject) obj;
-            List<Map<String, Object>> range = ((List<Map<String, Object>>) jo.get("niitMeritSvg"));
-            for (Map<String, Object> map : range) {
-                double lowerLimit = Double.parseDouble((String) map.get(JsonKey.LOWER_LIMIT));
-                double upperLimit = Double.parseDouble((String) map.get(JsonKey.UPPER_LIMIT));
-                if (marks >= lowerLimit && marks <= upperLimit) {
-                    properties.put(JsonKey.IMPLICATION, (String) map.get(JsonKey.INTERPRETITION));
-                }
-            }
+            properties.put(JsonKey.IMPLICATION, marksToImplication(reqMarks));
         } else {
             StringUtils.isNotBlank(reqMarks);
         }
@@ -240,8 +210,7 @@ public class CertificateGeneratorActor extends BaseActor {
                 CertificateResponse certificateResponse = new CertificateResponse(certificateGenerator.getUUID(certificateExtension), (String) qrMap.get(JsonKey.ACCESS_CODE), certModel.getIdentifier(), mapper.convertValue(certificateExtension, Map.class));
                 certificateResponse.setJsonUrl(properties.get(JsonKey.BASE_PATH).concat(jsonUrl));
 //                certificateResponse.setSvgUrl(properties.get(JsonKey.BASE_PATH).concat(svgUrl));
-                String svgDomainUrl = "https://sunbird1dev1private.blob.core.windows.net/reports";
-                certificateResponse.setSvgUrl(svgDomainUrl.concat(svgUrl));
+                certificateResponse.setSvgUrl(JsonKey.SVG_DOMAIN_URL.concat(svgUrl));
                 String apiToCall = CERT_REGISTRY_SERVICE + REGISTRY_SVG_URL;
                 Map<String, Object> req = new HashMap<>();
                 req.put(JsonKey.REQUEST, certificateResponse);
@@ -389,6 +358,23 @@ public class CertificateGeneratorActor extends BaseActor {
         } else {
             return certVar.getStorageParamsFromEvn();
         }
+    }
+
+    private String marksToImplication(String reqMarks) throws IOException, ParseException {
+        double marks = Double.parseDouble(reqMarks);
+        String implication = null;
+        String filePath = new File("").getAbsolutePath();
+        Object obj = new JSONParser().parse(new FileReader(filePath + JsonKey.GRADE_MANAGEMENT_JSON));
+        JSONObject jo = (JSONObject) obj;
+        List<Map<String, Object>> range = ((List<Map<String, Object>>) jo.get(JsonKey.GRADE_MANAGEMENT_KEY));
+        for (Map<String, Object> map : range) {
+            double lowerLimit = Double.parseDouble((String) map.get(JsonKey.LOWER_LIMIT));
+            double upperLimit = Double.parseDouble((String) map.get(JsonKey.UPPER_LIMIT));
+            if (marks >= lowerLimit && marks <= upperLimit) {
+                implication = (String) map.get(JsonKey.INTERPRETITION);
+            }
+        }
+        return implication;
     }
 
     private void cleanup(String path, String fileName) {
