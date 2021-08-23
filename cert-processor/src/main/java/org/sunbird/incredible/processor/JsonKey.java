@@ -78,6 +78,7 @@ public interface JsonKey {
     String KEYS = "keys";
     String JSON_URL = "jsonUrl";
     String PDF_URL = "pdfUrl";
+    String SVG_URL = "svgUrl";
     String UNIQUE_ID = "id";
     String GENERATE_CERT = "generateCert";
     String GET_SIGN_URL = "getSignUrl";
@@ -143,4 +144,8 @@ public interface JsonKey {
     String QRCODE_IMAGE = "qrCodeImage";
     String EXPIRY_DATE = "expiryDate";
     String ISSUER_NAME = "issuerName";
+//    Email Constants
+    String EMPTY_STRING = "";
+    String RECIPIENT_EMAIL = "recipientEmail";
+    String SENDGRID_ENDPOINT = "mail/send";
 }

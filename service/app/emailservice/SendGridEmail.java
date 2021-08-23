@@ -6,6 +6,7 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
+import org.sunbird.incredible.processor.JsonKey;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +32,7 @@ public class SendGridEmail {
             sg = new SendGrid("");
             mail = new Mail(from, subject, to, content);
             request.setMethod(Method.POST);
-            request.setEndpoint("mail/send");
+            request.setEndpoint(JsonKey.SENDGRID_ENDPOINT);
             request.setBody(mail.build());
             response = sg.api(request);
             if (response.getStatusCode() != 202) {

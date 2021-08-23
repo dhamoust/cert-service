@@ -183,24 +183,21 @@ public class CertTemplateController extends BaseController {
 
     public CompletionStage<Result> sendEmail(Http.Request httpRequest) throws Exception{
         try {
-        /*    Map<String, Object> template = getTemplate(getRequest(request()));
-            validateTemplate(template, true);
-            String identifier = (String) template.get("identifier");*/
-            List<String> pdfOrSvg = new ArrayList<String>();
-            List<String> recipientId = new ArrayList<String>();
-            List<String> recipientName = new ArrayList<String>();
-            List<String> courseName = new ArrayList<String>();
+            List<String> pdfOrSvg = new ArrayList<>();
+            List<String> recipientId = new ArrayList<>();
+            List<String> recipientName = new ArrayList<>();
+            List<String> courseName = new ArrayList<>();
             Http.RequestBody req= httpRequest.body();
             JsonNode json = req.asJson();
             for (JsonNode jsonValue : json) {
-                if (jsonValue.get("pdfUrl").textValue() != null && !jsonValue.get("pdfUrl").textValue().equals("")) {
-                    pdfOrSvg.add(jsonValue.get("pdfUrl").textValue());
-                } else if (jsonValue.get("svgUrl").textValue() != null && !jsonValue.get("svgUrl").textValue().equals("")) {
-                    pdfOrSvg.add(jsonValue.get("svgUrl").textValue());
+                if (jsonValue.get(JsonKey.PDF_URL).textValue() != null && !jsonValue.get(JsonKey.PDF_URL).textValue().equals(JsonKey.EMPTY_STRING)) {
+                    pdfOrSvg.add(jsonValue.get(JsonKey.PDF_URL).textValue());
+                } else if (jsonValue.get(JsonKey.SVG_URL).textValue() != null && !jsonValue.get(JsonKey.SVG_URL).textValue().equals(JsonKey.EMPTY_STRING)) {
+                    pdfOrSvg.add(jsonValue.get(JsonKey.SVG_URL).textValue());
                 }
-                recipientId.add(jsonValue.get("recipientEmail").textValue());
-                recipientName.add(jsonValue.get("recipientName").textValue());
-                courseName.add(jsonValue.get("courseName").textValue());
+                recipientId.add(jsonValue.get(JsonKey.RECIPIENT_EMAIL).textValue());
+                recipientName.add(jsonValue.get(JsonKey.RECIPIENT_NAME).textValue());
+                courseName.add(jsonValue.get(JsonKey.COURSE_NAME).textValue());
             }
 
             CompletableFuture<Map<String, Object>> future ;
