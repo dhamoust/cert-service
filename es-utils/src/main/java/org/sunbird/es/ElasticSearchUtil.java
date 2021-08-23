@@ -4,12 +4,6 @@
 package org.sunbird.es;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sendgrid.Method;
-import com.sendgrid.Request;
-import com.sendgrid.SendGrid;
-import com.sendgrid.helpers.mail.Mail;
-import com.sendgrid.helpers.mail.objects.Content;
-import com.sendgrid.helpers.mail.objects.Email;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
@@ -42,7 +36,6 @@ import org.sunbird.common.Platform;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -57,7 +50,6 @@ public class ElasticSearchUtil {
 	}
 
 	private static Map<String, RestHighLevelClient> esClient = new HashMap<String, RestHighLevelClient>();
-	private static AtomicInteger atomicInteger = new AtomicInteger();
 
 	public static int defaultResultLimit = 10000;
 	private static final int resultLimit = 100;
@@ -440,47 +432,4 @@ public class ElasticSearchUtil {
 		return future;
 	}
 
-
-	public static CompletableFuture sendGridEmail(List<String> pdfOrSvg, List<String> recipientId, List<String> recipientName, List<String> courseName) throws Exception {
-		CompletableFuture future = new CompletableFuture();
-		Request request = new Request();
-		Mail mail;
-		SendGrid sg;
-		com.sendgrid.Response response = null;
-		Email from = new Email("");
-		from.setName("StackRoute Certification Service");
-		int index = 0;
-		for (String recipients : recipientId) {
-			Email to = new Email(recipients);
-			String subject = "Download your certificate here";
-//			int index = recipientId.indexOf(recipients);
-			String body = "Dear " + recipientName.get(index) + ",<br/></br>" + "\n" + "<p>Congratulations, you have successfully completed a course titled : " + "\n" + courseName.get(index) + "\n" + ".</p> </br></br>" + "<p> You can download your certificate by following below link.</p>" + "\n" + "</br></br>" + pdfOrSvg.get(index) + "\n" + "<p></br></br>" + "Sincere Regards,</p>" + "<p></br>" + "NIIT Ltd</p>";
-			Content content = new Content("text/html", body);
-			sg = new SendGrid("");
-			mail = new Mail(from, subject, to, content);
-			request.setMethod(Method.POST);
-			request.setEndpoint("mail/send");
-			request.setBody(mail.build());
-			response = sg.api(request);
-			if (response.getStatusCode() != 202) {
-				throw new Exception(response.getBody());
-			}
-			index++;
-		}
-		Map res = new HashMap();
-		res.put("statusCode", response.getStatusCode());
-		res.put("status", "Mail has been sent successfully !!");
-		future.complete(res);
-		return future;
-	}
-
-
-	public static String getUniqueIdFromTimestamp(int environmentId) {
-
-		Random random = new Random();
-		long env = (environmentId + random.nextInt(99999)) / 10000000;
-		long uid = System.currentTimeMillis() + random.nextInt(999999);
-		uid = uid << 13;
-		return env + "" + uid + "" + atomicInteger.getAndIncrement();
-	}
 }

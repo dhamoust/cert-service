@@ -3,11 +3,12 @@ package controllers.certs;
 import com.fasterxml.jackson.databind.JsonNode;
 import controllers.BaseController;
 import controllers.RequestHandler;
+import emailservice.SendGridEmail;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
-import org.sunbird.incredible.processor.JsonKey;
 import org.sunbird.BaseException;
 import org.sunbird.es.ElasticSearchUtil;
+import org.sunbird.incredible.processor.JsonKey;
 import org.sunbird.message.IResponseMessage;
 import org.sunbird.message.ResponseCode;
 import org.sunbird.request.Request;
@@ -204,7 +205,7 @@ public class CertTemplateController extends BaseController {
 
             CompletableFuture<Map<String, Object>> future ;
 
-            future = ElasticSearchUtil.sendGridEmail(pdfOrSvg, recipientId, recipientName, courseName);
+            future = SendGridEmail.sendGridEmail(pdfOrSvg, recipientId, recipientName, courseName);
 
             return future.handleAsync((map, exception) -> {
                 Response response = new Response();

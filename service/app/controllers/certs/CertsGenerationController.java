@@ -15,6 +15,7 @@ import controllers.BaseController;
 import org.sunbird.request.Request;
 import play.mvc.Http;
 import play.mvc.Result;
+import utils.module.CertificateNumberGenerator;
 import utils.module.OnRequestHandler;
 
 import javax.inject.Inject;
@@ -56,7 +57,7 @@ public class CertsGenerationController  extends BaseController{
 					String templateId = (String) certReq.get(JsonKey.HTML_TEMPLATE_ID);
 					String url = (String) ((HashMap) ElasticSearchUtil.getTemplates().get()).get(templateId);
 					certReq.put(JsonKey.HTML_TEMPLATE, url);
-					certReq.put(JsonKey.CERTIFICATE_NUM, JsonKey.CERT_PREFIX + ElasticSearchUtil.getUniqueIdFromTimestamp(0));
+					certReq.put(JsonKey.CERTIFICATE_NUM, JsonKey.CERT_PREFIX + CertificateNumberGenerator.getUniqueIdFromTimestamp(0));
 					logger.info("=============" + req);
 					context.put(JsonKey.LOCATION,certReq.get(JsonKey.LOCATION));
 					req.setContext(context);
@@ -78,7 +79,7 @@ public class CertsGenerationController  extends BaseController{
 					String templateId = (String) certReq.get(JsonKey.SVG_TEMPLATE_ID);
 					String url = (String) ((HashMap) ElasticSearchUtil.getTemplates().get()).get(templateId);
 					certReq.put(JsonKey.SVG_TEMPLATE, url);
-					certReq.put(JsonKey.CERTIFICATE_NUM, JsonKey.CERT_PREFIX + ElasticSearchUtil.getUniqueIdFromTimestamp(0));
+					certReq.put(JsonKey.CERTIFICATE_NUM, JsonKey.CERT_PREFIX + CertificateNumberGenerator.getUniqueIdFromTimestamp(0));
 					logger.info("=============" + req);
 					context.put(JsonKey.LOCATION,certReq.get(JsonKey.LOCATION));
 					req.setContext(context);
