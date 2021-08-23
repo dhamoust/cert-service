@@ -4,6 +4,9 @@
 package org.sunbird.es;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigValue;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
@@ -408,28 +411,19 @@ public class ElasticSearchUtil {
 
 	public static CompletableFuture<Map<String, Object>> getTemplates() {
 		CompletableFuture<Map<String, Object>> future = new CompletableFuture<>();
-		//IndexRequest indexRequest = (StringUtils.isNotBlank(documentId)) ?
-		//		new IndexRequest(indexName, documentType, documentId) : new IndexRequest(indexName, documentType);
-		/*getClient(indexName).indexAsync(indexRequest.source(doc), new ActionListener<IndexResponse>() {
-			@Override
-			public void onResponse(IndexResponse indexResponse) {*/
-		Map<String, Object> map = new HashMap<String, Object>();
+		Config config = ConfigFactory.load("application.conf").getConfig("templates.list.all");
+		Config mapConfig = config.getConfig("map");
 
-		map.put("niitParticipationSvg","https://sunbird1dev1public.blob.core.windows.net/public/print-service/niitParticipation.svg");
-		map.put("niitMeritSvg", "https://sunbird1dev1public.blob.core.windows.net/public/print-service/meritCertificate.svg");
-		map.put("niitMeritCertificateHtml","https://sunbird1dev1public.blob.core.windows.net/public/print-service/RishabCertificate.zip");
-		map.put("niitMeritHtml","https://sunbird1dev1public.blob.core.windows.net/public/print-service/niitMeritHtml.zip");
-		map.put("niitParticipationHtml","https://sunbird1dev1public.blob.core.windows.net/public/print-service/NiitParticipationHTML.zip");
+		Map<String, Object> map = toMap(mapConfig);
 		future.complete(map);
-				/*	put("identifier", indexResponse.getId());
-				}});
-			}
-			@Override
-			public void onFailure(Exception e) {
-				future.completeExceptionally(e);
-			}
-		});*/
 		return future;
 	}
 
+	private static Map<String, Object> toMap(Config config) {
+		Map<String, Object> map = new HashMap<>();
+		for (Map.Entry<String, ConfigValue> entry: config.entrySet()) {
+			map.put(entry.getKey(), entry.getValue().unwrapped());
+		}
+		return map;
+	}
 }
